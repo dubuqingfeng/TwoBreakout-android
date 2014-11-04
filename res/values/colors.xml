@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <color name="breakoutBlue">#ff025597</color>
+    <color name="breakoutRed">#FF1493</color>
+    <color name="greenDark">#ff4cae4c</color>
+    <color name="grayLightest">#ffdbdbdb</color>
+
+</resources>

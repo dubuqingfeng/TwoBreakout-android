@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Breakout</string>
+    <string name="title_activity_breakout">Breakout</string>
+    <string name="launch">New Game</string>
+    <string name="cont">Continue Game</string>
+    <string name="sound">Sound</string>
+    <string name="score"></string>
+    <string name="source"><u>View Source On GitHub</u></string>
+    
+    <string name="version">对战版</string>
+    <string name="btn_audio">声音开关</string>
+    <string name="btn_1pstart">开始单人游戏</string>
+    <string name="btn_2pstart">开始双人游戏</string>
+    <string name="btn_about">关于开发者</string>
+    <string name="btn_option">设置</string>
+    <string name="prepare">双人游戏准备</string>
+    <string name="prepared">已准备</string>
+    <string name="exit">退出</string>
+    <string name="offline">对方已断开，游戏结束</string>
+    <string name="ok">好</string>
+    <string name="please2p">请使用茄子快传工具进行双人对战</string>
+    <string name="exit_text">确定要退出吗？</string>
+    <string name="cancel">取消</string>
+</resources>
