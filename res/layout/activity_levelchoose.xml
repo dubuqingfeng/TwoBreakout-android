@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/levelchoose"
     android:orientation="vertical" >
 
     <Button
         android:id="@+id/level1"
-        android:layout_width="250dp"
-        android:layout_height="52dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/exit_button_bg"
-        android:text="@string/btn_audio"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/btn_level_1"
         android:textSize="27sp" />
 
+    <!--
     <Button
         android:id="@+id/level2"
         android:layout_width="250dp"
@@ -34,7 +35,15 @@
         android:text="@string/prepare"
         android:textColor="#ffffff"
         android:textSize="27sp" />
+    -->
 
-   
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textSize="13sp"
+        android:layout_height="wrap_content"
+        android:text="点击图片进入游戏" />
 
 </LinearLayout>

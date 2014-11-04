@@ -11,14 +11,13 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.util.Log;
 
 /**
  * Represents a game ball. Responsible for drawing the ball, updating the ball's
  * position, collision checking, sound events, and point scoring.
  * 
  * */
-public class Ball extends ShapeDrawable {
+public class Ball2p extends ShapeDrawable {
 
 	// ball dimensions
 	private int left;
@@ -57,9 +56,9 @@ public class Ball extends ShapeDrawable {
 	 * @param sound
 	 *            sound on or off
 	 * */
-	public Ball(Context context, boolean sound) {
+	public Ball2p(Context context, boolean sound) {
 		super(new OvalShape());
-		this.getPaint().setColor(Color.CYAN);
+		this.getPaint().setColor(Color.RED);
 		soundOn = sound;
 
 		if (soundOn) {
@@ -99,7 +98,7 @@ public class Ball extends ShapeDrawable {
 		top = (SCREEN_HEIGHT / 2) - radius;
 		bottom = (SCREEN_HEIGHT / 2) + radius;
 
-		int startingXDirection = 1;
+		int startingXDirection = 1; // random beginning direction
 		if (startingXDirection > 0) {
 			if (!GameView2p.mIsInviter) {
 				// 这里不是邀请者
@@ -119,26 +118,6 @@ public class Ball extends ShapeDrawable {
 	 *            graphical canvas
 	 * */
 	public void drawBall(Canvas canvas) {
-		/*int[] data = new int[5];
-		for(int i = 0;i<4;i++){
-			switch (i){
-			case 0:
-				data[i] = left;
-				break;
-			case 1:
-				data[i] = top;
-				break;
-			case 2:
-				data[i] = right;
-				break;
-			case 3:
-				data[i] = bottom;
-				break;
-			}
-			
-		}
-		Log.w("test","test");
-		Breakout2p.sendGameBallDataMessage(data);*/
 		this.setBounds(left, top, right, bottom);
 		this.draw(canvas);
 	}
@@ -175,7 +154,7 @@ public class Ball extends ShapeDrawable {
 			velocityY = -velocityY;
 		}
 		// paddle collision
-		if (topPaddleCollision && velocityY > 0) {
+		if (topPaddleCollision && velocityY < 0) {
 			int toppaddleSplit = (mTopPaddle.right - mTopPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
 			if (ballCenter < mTopPaddle.left + toppaddleSplit) {

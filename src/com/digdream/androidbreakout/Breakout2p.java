@@ -1,6 +1,8 @@
 package com.digdream.androidbreakout;
 
+import com.digdream.androidbreakout.module.GameMessages.GameBallDataMessage;
 import com.digdream.androidbreakout.module.GameMessages.GameDataMessage;
+import com.digdream.androidbreakout.module.GameMessages.GameEndMessage;
 import com.digdream.androidbreakout.module.GameMessages.GameLevelMessage;
 import com.digdream.androidbreakout.ui.BaseActivity;
 import com.lenovo.game.GameMessage;
@@ -68,7 +70,7 @@ public class Breakout2p extends BaseActivity {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
-		//mGameShare.addMessageListener(gameView.mMessageListener);
+		// mGameShare.addMessageListener(gameView.mMessageListener);
 	}
 
 	@Override
@@ -115,14 +117,29 @@ public class Breakout2p extends BaseActivity {
 			return;
 		mGameShare.sendMessage(msg);
 	}
-	//发送游戏结束的message
+
+	public static void sendGameBallDataMessage(int[] data) {
+		// 发送message
+		GameUserInfo localUser = mGameShare.getLocalUser();
+		GameUserInfo remoteUser = getRemoteUser();
+		if (localUser == null || remoteUser == null)
+			return;
+		GameBallDataMessage dataMsg = new GameBallDataMessage(localUser.id,
+				remoteUser.id, data);
+		GameMessage msg = dataMsg.toGameMessage();
+		if (msg == null)
+			return;
+		mGameShare.sendMessage(msg);
+	}
+
+	// 发送游戏结束的message
 	public static void sendGameOverMessage(float eventX) {
 		// 发送message
 		GameUserInfo localUser = mGameShare.getLocalUser();
 		GameUserInfo remoteUser = getRemoteUser();
 		if (localUser == null || remoteUser == null)
 			return;
-		GameDataMessage dataMsg = new GameDataMessage(localUser.id,
+		GameEndMessage dataMsg = new GameEndMessage(localUser.id,
 				remoteUser.id, eventX);
 		GameMessage msg = dataMsg.toGameMessage();
 		if (msg == null)

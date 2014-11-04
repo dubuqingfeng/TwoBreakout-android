@@ -22,7 +22,7 @@ public class Block extends ShapeDrawable {
 	 * 
 	 * @param rect
 	 *            Android Rect object
-	 * @param color
+	 * @param color 
 	 *            number representing a Color value
 	 * */
 	public Block(Rect rect, int color) {

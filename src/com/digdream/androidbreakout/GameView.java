@@ -37,7 +37,7 @@ public class GameView extends SurfaceView implements Runnable {
 	private int playerTurns;
 	private int PLAYER_TURNS_NUM = 3;
 	private Paint turnsPaint;
-	private String playerTurnsText = "TURNS = ";
+	private String playerTurnsText = "生命数 = ";
 	private boolean soundToggle;
 	private int startNewGame;
 	private ObjectOutputStream oos;
@@ -56,11 +56,11 @@ public class GameView extends SurfaceView implements Runnable {
 	private Ball ball;
 	private Paddle paddle;
 	private ArrayList<Block> blocksList;
-	private String getReady = "GET READY...";
+	private String getReady = "请准备 ...";
 	private Paint getReadyPaint;
 	private int points = 0;
 	private Paint scorePaint;
-	private String score = "SCORE = ";
+	private String score = "总分  = ";
 	private BitmapDrawable bitmapDrawable;
 	private Bitmap bitmap;
 
@@ -210,7 +210,7 @@ public class GameView extends SurfaceView implements Runnable {
 		else {
 			if (showGameOverBanner) {
 				getReadyPaint.setColor(Color.RED);
-				canvas.drawText("GAME OVER!!!", canvas.getWidth() / 2,
+				canvas.drawText("游戏结束!!!", canvas.getWidth() / 2,
 						(canvas.getHeight() / 2) - (ball.getBounds().height())
 								- 50, getReadyPaint);
 			}
@@ -310,15 +310,15 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void initBlocks(Canvas canvas) {
-		int blockHeight = canvas.getWidth() / 36;
+		int blockHeight = canvas.getWidth() / 18;
 		int spacing = canvas.getWidth() / 144;
 		int topOffset = canvas.getHeight() / 10;
-		int blockWidth = (canvas.getWidth() / 10) - spacing;
+		int blockWidth = (canvas.getWidth() / 10) ;
 
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				int y_coordinate = (i * (blockHeight + spacing)) + topOffset;
-				int x_coordinate = j * (blockWidth + spacing);
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				int y_coordinate = (i * (blockHeight )) + topOffset;
+				int x_coordinate = j * (blockWidth );
 
 				Rect r = new Rect();
 				r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,

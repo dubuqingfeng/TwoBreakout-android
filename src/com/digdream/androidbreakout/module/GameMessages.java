@@ -1,8 +1,9 @@
 package com.digdream.androidbreakout.module;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import com.lenovo.game.GameMessage;
 
 public class GameMessages {
@@ -17,6 +18,7 @@ public class GameMessages {
     // All users have to send this message after game step is updated.
     public static final String MSG_TYPE_GAME_STEP = "game_step";
     public  static final String MSG_TYPE_GAME_LEVEL = "game_level";
+	public static final String MSG_TYPE_GAME_BALL_DATA = "game_ball_data";
 
     public static abstract class AbstractGameMessage {
         AbstractGameMessage(String type) {
@@ -89,6 +91,45 @@ public class GameMessages {
 
         public void fromJSON(JSONObject json) throws JSONException {
             mData = (float) json.getDouble("data");
+        }
+    }
+    public static class GameBallDataMessage extends AbstractGameMessage {
+        int[] mData;
+		private int id;
+
+        public GameBallDataMessage() {
+            super(MSG_TYPE_GAME_BALL_DATA);
+        }
+
+        public GameBallDataMessage(String from, String to, int[] gameData) {
+            super(MSG_TYPE_GAME_BALL_DATA);
+
+            setFrom(from);
+            setTo(to);
+            mData = gameData;
+        }
+
+        public int[] getGameData() {
+            return mData;
+        }
+
+        public JSONObject toJSON() throws JSONException {
+            JSONObject json = new JSONObject();
+            json.put("type", getType());
+            json.put("data", mData);
+            return json;
+        }
+
+        @SuppressLint("NewApi")
+		public void fromJSON(JSONObject json) throws JSONException {
+        	 JSONArray jsonArray = new JSONArray(json); //数据直接为一个数组形式，所以可以直接 用android提供的框架JSONArray读取JSON数据，转换成Array  
+        	  
+             for (int i = 0; i < jsonArray.length(); i++) {  
+                 JSONObject item = jsonArray.getJSONObject(i); //每条记录又由几个Object对象组成  
+                 id = item.getInt("data");     // 获取对象对应的值  
+                 mData[i] =  item.getInt("data");
+             
+             }  
         }
     }
     public static class GameLevelMessage extends AbstractGameMessage {
@@ -164,32 +205,32 @@ public class GameMessages {
     }
 
     public static class GameEndMessage extends AbstractGameMessage {
-        long mSpentTime;
+        float mSpentTime;
 
         public GameEndMessage() {
             super(MSG_TYPE_GAME_END);
         }
 
-        public GameEndMessage(String from, String to, long spentTime) {
+        public GameEndMessage(String from, String to, float spentTime) {
             super(MSG_TYPE_GAME_END);
             setFrom(from);
             setTo(to);
             mSpentTime = spentTime;
         }
 
-        public long getSpentTime() {
+        public float getSpentTime() {
             return mSpentTime;
         }
 
         public JSONObject toJSON() throws JSONException {
             JSONObject jo = new JSONObject();
             jo.put("type", getType());
-            jo.put("time", mSpentTime);
+            jo.put("data", mSpentTime);
             return jo;
         }
 
         public void fromJSON(JSONObject json) throws JSONException {
-            mSpentTime = json.getLong("time");
+        	mSpentTime = (float) json.getDouble("data");
         }
     }
 
@@ -239,6 +280,8 @@ public class GameMessages {
             gameMessage = new GameStepMessage();
         else if (type.equalsIgnoreCase(MSG_TYPE_GAME_LEVEL))
             gameMessage = new GameLevelMessage();
+        else if (type.equalsIgnoreCase(MSG_TYPE_GAME_BALL_DATA))
+            gameMessage = new GameBallDataMessage();
         if (gameMessage == null)
             return null;
 

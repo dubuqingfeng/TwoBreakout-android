@@ -31,11 +31,11 @@ public class LevelChooseActivity extends BaseActivity {
 	
 	private void init() {
 		btn_level1 = (Button)findViewById(R.id.level1);
-		btn_level2 = (Button)findViewById(R.id.level2);
-		btn_level3 = (Button)findViewById(R.id.level3);
+		/*btn_level2 = (Button)findViewById(R.id.level2);
+		btn_level3 = (Button)findViewById(R.id.level3);*/
 		btn_level1.setOnClickListener(mOnClickListener);
-		btn_level2.setOnClickListener(mOnClickListener);
-		btn_level3.setOnClickListener(mOnClickListener);
+		/*btn_level2.setOnClickListener(mOnClickListener);
+		btn_level3.setOnClickListener(mOnClickListener);*/
 	}
 	private OnClickListener mOnClickListener = new OnClickListener() {
 
@@ -60,12 +60,12 @@ public class LevelChooseActivity extends BaseActivity {
 				LevelChooseActivity.this.finish();
 				break;
 
-			case R.id.level2:
+			/*case R.id.level2:
 				// 	第二关
 				break;
 			case R.id.level3:
 				//	第三关
-				break;
+				break;*/
 			default:
 				break;
 

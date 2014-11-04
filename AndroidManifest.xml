@@ -41,12 +41,8 @@
             android:screenOrientation="portrait" >
         </activity>
            <activity
-            android:name="com.digdream.androidbreakout.ui.MainActivity"
-            android:label="@string/title_activity_breakout"
-            android:screenOrientation="portrait" >
-        </activity>
-           <activity
             android:name="com.digdream.androidbreakout.ui.LevelChooseActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/title_activity_breakout"
             android:screenOrientation="portrait" >
         </activity>

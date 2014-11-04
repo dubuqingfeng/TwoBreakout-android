@@ -290,9 +290,9 @@ public class AppActivity extends BaseActivity {
 			sound = true;
 		}
 		SharedPreferences soundSettingsresume = getSharedPreferences(SOUND_PREFS, 0);
-		SharedPreferences.Editor soundEditor = soundSettingsresume.edit();
-		soundEditor.putBoolean("soundOn", sound);
-		soundEditor.commit();
+		SharedPreferences.Editor soundEditorresume = soundSettingsresume.edit();
+		soundEditorresume.putBoolean("soundOn", sound);
+		soundEditorresume.commit();
 	}
 
 }
