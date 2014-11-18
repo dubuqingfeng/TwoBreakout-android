@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Breakout</string>
+    <string name="app_name">双人萌少女打砖块</string>
     <string name="title_activity_breakout">Breakout</string>
     <string name="launch">New Game</string>
     <string name="cont">Continue Game</string>
