@@ -1,17 +1,24 @@
-Breakout clone for Android
+Breakout for Android
 ==========================
+## Introduction
+## 
+## Update
+## Question
 
->Targeted for the Galaxy Nexus screen size
+中文说明：
+==========================
+在安卓上的一个打砖块游戏
+==========================
 >
->Still under development...
 >
->TODO:
->>fix collision algorithms
+>
+>
+>
 >>
->>settings menu
 >>
->>game music and options
 >>
->>code cleanup
+>>
+>>
+>>
+>>
 
-![Menu](https://raw.github.com/dhbikoff/AndroidBreakoutScala/master/screenshots/menu1.png) ![Get Ready](https://raw.github.com/dhbikoff/AndroidBreakoutScala/master/screenshots/ready1.png)
