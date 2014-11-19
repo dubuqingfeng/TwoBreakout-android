@@ -132,7 +132,7 @@ public class AppActivity extends BaseActivity {
 			case R.id.btn_1pstart:
 				// 单人开始游戏
 				newGame = 1;
-				Intent intent = new Intent(AppActivity.this, com.digdream.androidbreakout.Breakout.class);
+				Intent intent = new Intent(AppActivity.this, com.digdream.androidbreakout.game.oneplayer.Breakout.class);
 				intent.putExtra(NEW_GAME, newGame);
 				intent.putExtra(SOUND_ON_OFF, sound);
 				startActivity(intent);
