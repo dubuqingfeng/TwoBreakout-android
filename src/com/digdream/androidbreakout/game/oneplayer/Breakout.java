@@ -9,8 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * Activity for the running game. Holds the game's graphics thread. Saves and
- * restores game data when paused or resumed.
+ * activity运行游戏。拥有游戏中的图形线程。保存并暂停或恢复时恢复游戏数据。
  * 
  */
 public class Breakout extends Activity {
@@ -19,11 +18,7 @@ public class Breakout extends Activity {
 	private GameView gameView;
 
 	/**
-	 * Activity constructor. Acquires media volume control. Hides the titlebar
-	 * and requests a fullscreen window. Receives an intent from Splash. Reads
-	 * intent values for sound state and new/continue game. Passes the new game
-	 * value to the game's thread which signals whether to start a new game or
-	 * continue and existing game.
+	 * activity 构造器。获得媒体的音量控制。隐藏标题栏并请求全屏窗口。通过intent传来的值/继续游戏。通过新游戏值到游戏中的线程发信号是否开始新游戏或继续与现有的游戏。
 	 * 
 	 * @param savedInstanceState
 	 *            saved data from a previous run of this Activity
@@ -51,7 +46,7 @@ public class Breakout extends Activity {
 	}
 
 	/**
-	 * Called when the system pauses this Activity. Saves game data and stops
+	 * 当系统暂停此活动时调用。保存游戏数据，并停止
 	 * the game's thread from running.
 	 * 
 	 */
@@ -62,8 +57,7 @@ public class Breakout extends Activity {
 	}
 
 	/**
-	 * Called when the system resumes this Activity. Restores game data and runs
-	 * game thread.
+	 * 系统恢复这一活动时调用。恢复游戏数据和运行游戏线程。
 	 * 
 	 * */
 	@Override

@@ -27,8 +27,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /**
- * Creates and draws the graphics for the game. Runs a Thread for animation and
- * game physics. Saves and restores game data when paused or restored.
+ * 创建并绘制图形的游戏。运行一个线程用于动画和游戏物理。保存并暂停或恢复时恢复游戏数据。
  * 
  */
 public class GameView extends SurfaceView implements Runnable {
@@ -67,9 +66,7 @@ public class GameView extends SurfaceView implements Runnable {
 	private Bitmap bitmap;
 
 	/**
-	 * Constructor. Sets sound state and new game signal depending on the
-	 * incoming intent from the Breakout class. Instantiates the ball, blocks,
-	 * and paddle. Sets up the Paint parameters for drawing text to the screen.
+	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
 	 * 
 	 * @param context
 	 *            Android Context
@@ -106,13 +103,9 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Runs the game thread. Sets the frame rate for drawing graphics. Acquires
-	 * a canvas for drawing. If no blocks exist, initialize game objects. Moves
-	 * the paddle according to touch events. Checks for collisions as the ball's
-	 * moves. Keeps track of player turns and ends the game when turns run out.
-	 * Awards the player an extra turn when a level is completed. Draws text to
-	 * the screen showing player score and turns remaining. Draws text to
-	 * announce when the game begins or ends.
+	 * 运行游戏线程。设置帧速率来绘制图形。使用画布绘制。如果不存在的砖块，初始化游戏对象。移动根据触摸事件的挡板。
+	 * 检查碰撞的球的移动。跟踪玩家结束比赛的时候跑出来。奖励的玩家，当等级完成一个额外的回合。绘制文本
+	 * 屏幕显示玩家的分数和剩余生命。绘制文本宣布比赛开始或结束时。
 	 * 
 	 * */
 	public void run() {
@@ -173,7 +166,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Draws graphics to the screen.
+	 * 画图像给屏幕
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -185,10 +178,8 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Pauses the animation until the wait counter is satisfied. Sets the
-	 * velocity and coordinates of the ball. Checks for collisions. Checks if
-	 * the game is over. Draws text to alert the user if the ball restarts or
-	 * the game is over.
+	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。
+	 * 绘制文本来提醒用户，如果球重新启动或游戏就结束了。...
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -228,9 +219,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Resets variables to signal a new game. Deletes the remaining blocks list.
-	 * When the run function sees the blocks list is empty, it will initialize a
-	 * new game board.
+	 * 重置变量预示着新的游戏。删除剩余的砖块列表。当运行看到砖块列表是空的，它会启动新的游戏板
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -243,8 +232,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Initializes graphical objects. Restores game state if an existing game is
-	 * continued.
+	 * 初始化图形对象。恢复比赛状态，如果现有的游戏继续
 	 * 
 	 * @param canvas
 	 *            graphical canvas
@@ -261,9 +249,8 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Restores a saved ArrayList of blocks. Reads through an ArrayList of
-	 * integer Arrays. Passes the values to construct a block and adds the block
-	 * to an ArrayList.
+	 * 恢复砖块保存的ArrayList。通过读取ArrayList整数数组。传递值砖块，并增加了砖块到一个ArrayList。
+	 * 
 	 * 
 	 * @param arr
 	 *            ArrayList of integer arrays containing the coordinates and
@@ -280,7 +267,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Opens a saved game file and reads in data to restore saved game state.
+	 * 打开一个保存的游戏文件并读取数据恢复保存游戏状态。
 	 * */
 	private void restoreGameData() {
 		try {
@@ -307,9 +294,8 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Initializes blocks. Measures the width and height of the canvas for the
-	 * dimensions and coordinates of the blocks. Sets the color depending on the
-	 * block's row. Adds the block to an ArrayList.
+	 * 初始化块。canvas的宽度和高度尺寸和砖块的坐标。设置颜色取决于砖块的行。添加砖块到一个ArrayList。
+	 *
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -350,7 +336,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Draws blocks to screen
+	 * 画砖块
 	 * 
 	 * @param canvas
 	 *            graphical canvas
@@ -362,8 +348,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Saves game state. Reads block color and coordinates into an ArrayList.
-	 * Saves blocks, player points, and player turns into a data file.
+	 * 保存游戏状态。读取的砖块色和坐标转换成一个ArrayList。保存砖块，玩家分数，玩家生命数变成一个数据文件。
 	 * */
 	private void saveGameData() {
 		ArrayList<int[]> arr = new ArrayList<int[]>();
@@ -388,6 +373,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
+	 * 保存游戏数据，并且摧毁线程
 	 * Saves game data and destroys Thread.
 	 * */
 	public void pause() {
@@ -417,7 +403,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Overridden Touch event listener. Reads screen touches to move the paddle.
+	 * 重写触摸事件监听器。通过触控移动挡板。
 	 * {@inheritDoc}
 	 * 
 	 * @param event

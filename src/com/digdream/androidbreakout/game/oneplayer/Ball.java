@@ -19,7 +19,7 @@ import android.media.SoundPool;
  * 增大半径，增加球，强壮球，遇到挡板砖块更改颜色，控制球速，增加球速，减慢球速，球初始位置和速度
  * 
  * 小球以立体球代替。。
- * 代表一个比赛用球。负责绘制球，更新球的位置，碰撞检测，声音事件和得分点。
+ * 负责绘制球，更新球的位置，碰撞检测，声音事件和得分点。
  * 
  * */
 public class Ball extends ShapeDrawable {
@@ -35,10 +35,10 @@ public class Ball extends ShapeDrawable {
 	private int velocityX;
 	private int velocityY;
 
-	//判断是否增球以及强壮
+	//判断是否增球以及穿透
 	public boolean addflag;
 	public boolean strongflag;
-	// 当球击中屏幕底部的计时器
+	// 当球击中屏幕底部的计时
 	private final int resetBallTimer = 1000;
 
 	private int SCREEN_WIDTH;
@@ -55,7 +55,7 @@ public class Ball extends ShapeDrawable {
 	private int bottomSoundId;
 
 	/**
-	 * Constructor. Sets the Paint and sound parameters.当球击中屏幕bottomConstructor计时器。设置的油漆和声音参数。
+	 * 构造器。设置颜色及声音参数
 	 * 
 	 * @param context
 	 *            Android context
@@ -118,7 +118,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 平球的画布。
+	 * 绘制球
 	 * 
 	 * @param canvas
 	 *            graphical canvas
@@ -129,7 +129,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值被使用递减玩家圈。
+	 * 更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值使用递减生命数。
 	 * 
 	 * @return number to decrement player turns
 	 * */
@@ -192,7 +192,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 检查是否球已经撞上了桨。起着如果声音效果有碰撞和声音被启用。
+	 * 检查是否球已经撞上了挡板。音效如果声音效果有碰撞和声音被启用。
 	 * @param paddle
 	 *            paddle object
 	 * 
@@ -220,11 +220,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 检查在一个ArrayList每块一球的碰撞。如果有发生碰撞时，该块的点的值被添加到一个点总数。如果完善的启用，声音效果会碰撞玩。如果有一个碰撞，blockCollision被设置为true setVelocity方法。
-	 * Checks for a ball collision with each block in an ArrayList. If there is
-	 * a collision, the point value of the block is added to a points total. If
-	 * sound is enabled, a sound effect will play on collision. If there is a
-	 * collision, blockCollision is set to true for the setVelocity method.
+	 * 检查在一个ArrayList每块与球的碰撞。如果有发生碰撞时，该块的点的值被添加到一个总点数。如果启用音效，声音效果会碰撞。如果有一个碰撞，blockCollision被设置为true 。
 	 * 
 	 * @param blocks
 	 *            ArrayList of block objects
@@ -275,7 +271,6 @@ public class Ball extends ShapeDrawable {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
 				//这里可以添加改变颜色
-				//there can add change color.
 				this.getPaint().setColor(Color.BLUE);
 				return points += getPoints(color);
 			}
@@ -326,7 +321,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 返回一个基于颜色的块的点值。
+	 * 返回一个基于颜色的块的分数。
 	 * 
 	 * @param color
 	 *            block color
