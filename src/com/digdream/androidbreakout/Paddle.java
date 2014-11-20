@@ -7,6 +7,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.util.Log;
 
 /**
+ * 
  * Represents the game paddle. Extends a ShapeDrawable to include a color value and
  * methods for setting the paddle's location on screen.
  * */

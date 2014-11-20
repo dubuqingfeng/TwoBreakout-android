@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * 这是设置的activity，设置一些声音，挡板颜色。
+ * 排行
+ * 控制
+ * @author user
+ *
+ */
 public class OptionActivity extends BaseActivity{
 	private Button mBtnAudio;
 	private boolean sound;

@@ -7,6 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+/**
+ * 关于开发者的activity，前尘忆梦，总结游戏。
+ * 
+ * 参考rpg
+ * @author user
+ *
+ */
+
 public class AboutActivity extends BaseActivity{
 
 	

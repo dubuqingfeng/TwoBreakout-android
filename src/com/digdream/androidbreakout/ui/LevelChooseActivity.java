@@ -13,6 +13,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * 
+ * @author user
+ *
+ */
 public class LevelChooseActivity extends BaseActivity {
 
 	

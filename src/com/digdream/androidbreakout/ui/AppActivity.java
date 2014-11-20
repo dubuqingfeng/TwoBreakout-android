@@ -25,7 +25,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-
+/**
+ * 程序主界面
+ * 
+ * 前尘忆梦--关于开发者
+ * 
+ * @author user
+ *
+ */
 public class AppActivity extends BaseActivity {
 	private static final String TAG = "AppActivity程序主界面";
 	private final String NEW_GAME = "NEW_GAME";
@@ -124,7 +131,6 @@ public class AppActivity extends BaseActivity {
 
 			case R.id.btn_about:
 				// 跳转关于开发者见面
-				// 跳转设置界面
 				Intent intentabout = new Intent(AppActivity.this,
 						com.digdream.androidbreakout.ui.AboutActivity.class);
 				startActivity(intentabout);

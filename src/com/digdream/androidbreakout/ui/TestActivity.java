@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author user
+ *
+ */
 public class TestActivity extends Activity {
 
 	private TextView info = null;
