@@ -46,6 +46,12 @@
             android:theme="@style/withBackgroundTitleLevel1"  
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.digdream.androidbreakout.game.twoplayer.Breakout2p"
+            android:label="@string/title_activity_breakout"
+            android:theme="@style/withBackgroundTitleLevel1"  
+            android:screenOrientation="portrait" >
+        </activity>
            <activity
             android:name="com.digdream.androidbreakout.ui.LevelChooseActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"

@@ -89,7 +89,8 @@ public class Ball extends ShapeDrawable {
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 
-		radius = SCREEN_WIDTH / 72;
+		radius = SCREEN_WIDTH / 48;
+		//radius = SCREEN_WIDTH / 72;
 		velocityX = radius;
 		velocityY = radius * 2;
 

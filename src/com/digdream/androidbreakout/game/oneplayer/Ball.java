@@ -1,25 +1,28 @@
 package com.digdream.androidbreakout.game.oneplayer;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.digdream.androidbreakout.GameView2p;
 import com.digdream.androidbreakout.R;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
 /**
- * 这是一个玩家的小球类。
- * 增大半径，增加球，强壮球，遇到挡板砖块更改颜色，控制球速，增加球速，减慢球速，球初始位置和速度
+ * 这是一个玩家的小球类。 增大半径，增加球，强壮球，遇到挡板砖块更改颜色，控制球速，增加球速，减慢球速，球初始位置和速度
  * 
- * 小球以立体球代替。。
- * 负责绘制球，更新球的位置，碰撞检测，声音事件和得分点。
+ * 小球以立体球代替。。 负责绘制球，更新球的位置，碰撞检测，声音事件和得分点。
  * 
  * */
 public class Ball extends ShapeDrawable {
@@ -31,11 +34,13 @@ public class Ball extends ShapeDrawable {
 	private int bottom;
 	private int radius;
 
+	private static Random rand = new Random();
+
 	// 球的速度
 	private int velocityX;
 	private int velocityY;
 
-	//判断是否增球以及穿透
+	// 判断是否增球以及穿透
 	public boolean addflag;
 	public boolean strongflag;
 	// 当球击中屏幕底部的计时
@@ -47,6 +52,9 @@ public class Ball extends ShapeDrawable {
 	private boolean blockCollision;
 	private Rect mPaddle;
 	private Rect ballRect;
+
+	private Matrix matrix;
+	Bitmap ballbmp;
 
 	private boolean soundOn;
 	private SoundPool soundPool;
@@ -64,7 +72,17 @@ public class Ball extends ShapeDrawable {
 	 * */
 	@SuppressWarnings("deprecation")
 	public Ball(Context context, boolean sound) {
+
+		// super();
 		super(new OvalShape());
+
+		// this.matrix = new Matrix();
+		// this.matrix.postScale(0.7F, 0.7F);
+
+		// this.ballbmp = Bitmap.createBitmap(readBitmap(context, "r" + 0), 0,
+		// 0, 28, 28,
+		// this.matrix, true);
+
 		this.getPaint().setColor(Color.CYAN);
 		soundOn = sound;
 
@@ -76,6 +94,12 @@ public class Ball extends ShapeDrawable {
 		}
 	}
 
+	private static Bitmap readBitmap(Context paramContext, String paramString) {
+		int i = paramContext.getResources().getIdentifier(paramString,
+				"drawable", paramContext.getPackageName());
+		return BitmapFactory.decodeResource(paramContext.getResources(), i);
+	}
+
 	/**
 	 * 初始化球参数。计算，根据球的尺寸屏幕的宽度和高度。设置一个起始速度。随机选择球是否移动向左或向右的开始。
 	 * 
@@ -85,15 +109,15 @@ public class Ball extends ShapeDrawable {
 	 *            screen height
 	 * */
 	public void initCoords(int width, int height) {
-		//Random rnd = new Random(); // starting x velocity direction
+		// Random rnd = new Random(); // starting x velocity direction
 
 		paddleCollision = false;
 		blockCollision = false;
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 
-		//球的半径
-		radius = SCREEN_WIDTH / 64;
+		// 球的半径
+		radius = SCREEN_WIDTH / 48;
 		velocityX = radius;
 		velocityY = radius * 2;
 
@@ -113,7 +137,7 @@ public class Ball extends ShapeDrawable {
 				// 这里是邀请者
 				velocityY = -velocityY;
 			}
-			
+
 		}
 	}
 
@@ -141,7 +165,7 @@ public class Ball extends ShapeDrawable {
 			blockCollision = false; // reset
 		}
 
-		// 桨碰撞
+		// 挡板碰撞
 		if (paddleCollision && velocityY > 0) {
 			int paddleSplit = (mPaddle.right - mPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
@@ -156,7 +180,6 @@ public class Ball extends ShapeDrawable {
 			}
 			velocityY = -velocityY;
 		}
-		
 
 		// side walls collision侧壁碰撞
 		if (this.getBounds().right >= SCREEN_WIDTH) {
@@ -183,16 +206,17 @@ public class Ball extends ShapeDrawable {
 		}
 
 		// move ball
-		left += velocityX;
-		right += velocityX;
-		top += velocityY;
-		bottom += velocityY;
+		left += velocityX / 2;
+		right += velocityX / 2;
+		top += velocityY / 2;
+		bottom += velocityY / 2;
 
 		return bottomHit;
 	}
 
 	/**
 	 * 检查是否球已经撞上了挡板。音效如果声音效果有碰撞和声音被启用。
+	 * 
 	 * @param paddle
 	 *            paddle object
 	 * 
@@ -208,7 +232,7 @@ public class Ball extends ShapeDrawable {
 				&& ballRect.bottom >= mPaddle.top - (radius * 2)
 				&& ballRect.top <= mPaddle.bottom + (radius * 2)) {
 			paddleCollision = true;
-			//this is a collision change color
+			// this is a collision change color
 			this.getPaint().setColor(Color.BLACK);
 			if (soundOn && velocityY > 0) {
 				soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
@@ -220,7 +244,8 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 * 检查在一个ArrayList每块与球的碰撞。如果有发生碰撞时，该块的点的值被添加到一个总点数。如果启用音效，声音效果会碰撞。如果有一个碰撞，blockCollision被设置为true 。
+	 * 检查在一个ArrayList每块与球的碰撞。如果有发生碰撞时，该块的点的值被添加到一个总点数。如果启用音效，声音效果会碰撞。如果有一个碰撞，
+	 * blockCollision被设置为true 。
 	 * 
 	 * @param blocks
 	 *            ArrayList of block objects
@@ -270,38 +295,23 @@ public class Ball extends ShapeDrawable {
 				if (soundOn) {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
-				//这里可以添加改变颜色
+				
+				// 这里可以添加改变颜色
 				this.getPaint().setColor(Color.BLUE);
 				return points += getPoints(color);
 			}
 		}
 		return points;
 	}
-	/**
-	 * 这里添加一个落物，增加球速
-	 * Returns
-	 * 
-	 * @param 
-	 * 
-	 * @author user
-	 * 
-	 * @return
-	 */
 	
-	public void addBallVelocity(){
-		if(velocityX <= 5 )
-		{
-			
-		}
-		if(velocityY <= 5 )
-		{
-			
-		}
+	
+
+	private static int rand(int paramInt) {
+		return (rand.nextInt() >>> 1) % paramInt;
 	}
-	
+
 	/**
-	 * 这里提供一个落物，减慢球速的方法
-	 * Returns 
+	 * 这里添加一个落物，增加球速 Returns
 	 * 
 	 * @param
 	 * 
@@ -309,14 +319,31 @@ public class Ball extends ShapeDrawable {
 	 * 
 	 * @return
 	 */
-	public void subBallVelocity(){
-		if(velocityX >= 10 )
-		{
-			
+
+	public void addBallVelocity() {
+		if (velocityX <= 5) {
+
 		}
-		if(velocityY >= 10 )
-		{
-			
+		if (velocityY <= 5) {
+
+		}
+	}
+
+	/**
+	 * 这里提供一个落物，减慢球速的方法 Returns
+	 * 
+	 * @param
+	 * 
+	 * @author user
+	 * 
+	 * @return
+	 */
+	public void subBallVelocity() {
+		if (velocityX >= 10) {
+
+		}
+		if (velocityY >= 10) {
+
 		}
 	}
 

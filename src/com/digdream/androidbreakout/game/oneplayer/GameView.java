@@ -53,7 +53,7 @@ public class GameView extends SurfaceView implements Runnable {
 	private boolean checkSize = true;
 	private boolean newGame = true;
 	private int waitCount = 0;
-	//ball应改为数组
+	// ball应改为数组
 	private Ball ball;
 	private Paddle paddle;
 	private ArrayList<Block> blocksList;
@@ -64,6 +64,10 @@ public class GameView extends SurfaceView implements Runnable {
 	private String score = "总分  = ";
 	private BitmapDrawable bitmapDrawable;
 	private Bitmap bitmap;
+
+	private Item[] item = new Item[5];
+	Bitmap[] itembmp = new Bitmap[9];
+	Bitmap blockbmp;
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -77,15 +81,17 @@ public class GameView extends SurfaceView implements Runnable {
 	 * */
 	public GameView(Context context, int launchNewGame, boolean sound) {
 		super(context);
-		startNewGame = launchNewGame; // new game or continue
+		startNewGame = launchNewGame; // 新游戏还是继续
 		playerTurns = PLAYER_TURNS_NUM;
 		soundToggle = sound;
 		holder = getHolder();
-		//初始化ball球。
+		// 初始化ball球。
 		ball = new Ball(this.getContext(), soundToggle);
+		for (int k = 0; k <= 5; k++)
+			item[k] = new Item();
 		paddle = new Paddle();
 		blocksList = new ArrayList<Block>();
-		//设置背景
+		// 设置背景
 		setBackgroundResource(R.drawable.chara1);
 		scorePaint = new Paint();
 		scorePaint.setColor(Color.WHITE);
@@ -100,6 +106,22 @@ public class GameView extends SurfaceView implements Runnable {
 		getReadyPaint.setTextAlign(Paint.Align.CENTER);
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
+		
+		this.blockbmp = readBitmap(context, "chara1_block");
+		//
+		int n = 0;
+		while (true) {
+			
+			this.itembmp[n] = readBitmap(context, "item" + (n + 1));
+			n++;
+			if (n > 9) {
+				return;
+			}
+			continue;
+
+		}
+		
+
 	}
 
 	/**
@@ -118,15 +140,16 @@ public class GameView extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-				//获得图片
-				bitmapDrawable=(BitmapDrawable)getResources().getDrawable(R.drawable.chara1);
-				//设置显示大小
+				// 获得图片
+				bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+						R.drawable.chara1);
+				// 设置显示大小
 				bitmapDrawable.setBounds(0, 0, 80, 80);
-				bitmap=(bitmapDrawable).getBitmap();
-				//画出图片
+				bitmap = (bitmapDrawable).getBitmap();
+				// 画出图片
 				canvas.drawBitmap(bitmap, 50, 50, null);
-				//canvas.drawColor(Color.BLACK);
-				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.  
+				// canvas.drawColor(Color.BLACK);
+				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
 					checkSize = true;
 					newGame = true;
@@ -178,8 +201,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。
-	 * 绘制文本来提醒用户，如果球重新启动或游戏就结束了。...
+	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。 绘制文本来提醒用户，如果球重新启动或游戏就结束了。...
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -197,19 +219,19 @@ public class GameView extends SurfaceView implements Runnable {
 			}
 			// paddle collision
 			ball.checkPaddleCollision(paddle);
-			// block collision and points tally
+			// block collision and points tally 计数器
 			points += ball.checkBlocksCollision(blocksList);
 		}
 
 		else {
 			if (showGameOverBanner) {
-				//跳转到结果activity
+				// 跳转到结果activity
 				getReadyPaint.setColor(Color.RED);
 				canvas.drawText("游戏结束!!!", canvas.getWidth() / 2,
 						(canvas.getHeight() / 2) - (ball.getBounds().height())
 								- 50, getReadyPaint);
 			}
-			//提示请准备。。。
+			// 提示请准备。。。
 			getReadyPaint.setColor(Color.WHITE);
 			canvas.drawText(getReady, canvas.getWidth() / 2,
 					(canvas.getHeight() / 2) - (ball.getBounds().height()),
@@ -295,7 +317,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 	/**
 	 * 初始化块。canvas的宽度和高度尺寸和砖块的坐标。设置颜色取决于砖块的行。添加砖块到一个ArrayList。
-	 *
+	 * 
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -304,12 +326,12 @@ public class GameView extends SurfaceView implements Runnable {
 		int blockHeight = canvas.getWidth() / 18;
 		int spacing = canvas.getWidth() / 144;
 		int topOffset = canvas.getHeight() / 10;
-		int blockWidth = (canvas.getWidth() / 10) ;
+		int blockWidth = (canvas.getWidth() / 10);
 
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
-				int y_coordinate = (i * (blockHeight )) + topOffset;
-				int x_coordinate = j * (blockWidth );
+				int y_coordinate = (i * (blockHeight)) + topOffset;
+				int x_coordinate = j * (blockWidth);
 
 				Rect r = new Rect();
 				r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
@@ -373,8 +395,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * 保存游戏数据，并且摧毁线程
-	 * Saves game data and destroys Thread.
+	 * 保存游戏数据，并且摧毁线程 Saves game data and destroys Thread.
 	 * */
 	public void pause() {
 		saveGameData();
@@ -393,8 +414,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * Resumes the game. Starts a new game Thread.
-	 * 开始游戏线程
+	 * Resumes the game. Starts a new game Thread. 开始游戏线程
 	 * */
 	public void resume() {
 		running = true;
@@ -404,7 +424,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 	/**
 	 * 重写触摸事件监听器。通过触控移动挡板。
-	 * {@inheritDoc}
 	 * 
 	 * @param event
 	 *            screen touch event
@@ -420,9 +439,19 @@ public class GameView extends SurfaceView implements Runnable {
 		}
 		return touched;
 	}
-	 private static Bitmap readBitmap(Context paramContext, String paramString)
-	  {
-	    int i = paramContext.getResources().getIdentifier(paramString, "drawable", paramContext.getPackageName());
-	    return BitmapFactory.decodeResource(paramContext.getResources(), i);
-	  }
+	/**
+	 * 读取位图
+	 * @param paramContext
+	 * 		Android Context
+	 * @param paramString
+	 * 		path
+	 * @return
+	 * 		bitmap
+	 */
+
+	private static Bitmap readBitmap(Context paramContext, String paramString) {
+		int i = paramContext.getResources().getIdentifier(paramString,
+				"drawable", paramContext.getPackageName());
+		return BitmapFactory.decodeResource(paramContext.getResources(), i);
+	}
 }
