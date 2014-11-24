@@ -65,6 +65,8 @@ public class GameView extends SurfaceView implements Runnable {
 	private String score = "总分  = ";
 	private BitmapDrawable bitmapDrawable;
 	private Bitmap bitmap;
+	
+	private StageData stagedata;
 
 	//private Item[] item = new Item[5];
 	//Bitmap[] itembmp = new Bitmap[9];
@@ -108,6 +110,9 @@ public class GameView extends SurfaceView implements Runnable {
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
 		
+		// 画出图片
+		//canvas.drawBitmap(bitmap, 50, 50, null);
+		
 		//this.blockbmp = readBitmap(context, "chara1_block");
 		//
 		//int n = 0;
@@ -141,14 +146,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-				// 获得图片
-				bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
-						R.drawable.chara1);
-				// 设置显示大小
-				bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10), canvas.getWidth() / 18);
-				bitmap = (bitmapDrawable).getBitmap();
-				// 画出图片
-				//canvas.drawBitmap(bitmap, 50, 50, null);
+				
 				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
@@ -220,7 +218,7 @@ public class GameView extends SurfaceView implements Runnable {
 			}
 			// paddle collision
 			ball.checkPaddleCollision(paddle);
-			// block collision and points tally 计数器
+			// block collision and points  计数器
 			points += ball.checkBlocksCollision(blocksList);
 		}
 
@@ -284,7 +282,7 @@ public class GameView extends SurfaceView implements Runnable {
 			Rect r = new Rect();
 			int[] blockNums = arr.get(i);
 			r.set(blockNums[0], blockNums[1], blockNums[2], blockNums[3]);
-			Block b = new Block(r, blockNums[4], bitmap, blockNums[0], blockNums[1]);
+			Block b = new Block(r, blockNums[4]);
 			blocksList.add(b);
 		}
 	}
@@ -329,12 +327,17 @@ public class GameView extends SurfaceView implements Runnable {
 		int topOffset = canvas.getHeight() / 10;
 		int blockWidth = (canvas.getWidth() / 10);
 
-		//Resources res=getResources();  
-		//Drawable drawable = res.getDrawable(R.drawable.num4);  
-		//实际上这是一个BitmapDrawable对象  
-		//BitmapDrawable bitmapDrawable=(BitmapDrawable)drawable;  
-		//可以在调用getBitmap方法，得到这个位图  
-		//Bitmap bitmap=bitmapDrawable.getBitmap();  
+		// 获得图片
+		bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+				R.drawable.item1);
+		// 设置显示大小
+		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10), canvas.getWidth() / 18);
+		bitmap = (bitmapDrawable).getBitmap();
+		/**
+		 * 这里需要读取StageData.java的数据，读取关卡的数据
+		 * 控制二维数组。
+		 * 根据stage值。
+		 */
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;

@@ -18,8 +18,10 @@ public class Block extends ShapeDrawable {
 	private Paint paint;
 	private int blockColor;
 	private Bitmap bitmap;
-	private float left;
-	private float top;
+	float left;
+	float top;
+	float right;
+	float bottom;
 
 	/**
 	 * 构造器，使用父类方法构造Gect，设置颜色
@@ -29,9 +31,9 @@ public class Block extends ShapeDrawable {
 	 * @param color 
 	 *            number representing a Color value
 	 * */
-	public Block(Rect rect, int color,Bitmap bitmap ,float left,float top) {
-		//super(new RectShape());
-		//this.setBounds(rect);
+	public Block(Rect rect, int color) {
+		super(new RectShape());
+		this.setBounds(rect);
 		paint = new Paint();
 		paint.setColor(color);
 		blockColor = color;
@@ -45,11 +47,13 @@ public class Block extends ShapeDrawable {
 	 *            number representing a Color value
 	 * */
 	public Block(int color,Bitmap bitmap ,float left,float top) {
-		//super(new RectShape());
+		super(new RectShape());
 		//this.setBounds(rect);
 		this.bitmap = bitmap;
 		this.left = left;
 		this.top = top;
+		this.right = bitmap.getWidth();
+		this.bottom = bitmap.getHeight();
 		paint = new Paint();
 		paint.setColor(color);
 		blockColor = color;

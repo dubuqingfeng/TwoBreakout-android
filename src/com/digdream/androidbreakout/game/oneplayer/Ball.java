@@ -18,6 +18,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.Log;
 
 /**
  * 这是一个玩家的小球类。 增大半径，增加球，强壮球，遇到挡板砖块更改颜色，控制球速，增加球速，减慢球速，球初始位置和速度
@@ -42,7 +43,7 @@ public class Ball extends ShapeDrawable {
 
 	// 判断是否增球以及穿透
 	public boolean addflag;
-	public boolean strongflag;
+	public boolean strongflag = false;
 	// 当球击中屏幕底部的计时
 	private final int resetBallTimer = 1000;
 
@@ -61,6 +62,7 @@ public class Ball extends ShapeDrawable {
 	private int paddleSoundId;
 	private int blockSoundId;
 	private int bottomSoundId;
+	private final String TAG = "Ball";
 
 	/**
 	 * 构造器。设置颜色及声音参数
@@ -159,9 +161,13 @@ public class Ball extends ShapeDrawable {
 	 * */
 	public int setVelocity() {
 		int bottomHit = 0;
-
+		/
 		if (blockCollision) {
+			//如果有闪光球，不执行条件句
+			if(!strongflag)
+			{
 			velocityY = -velocityY;
+			}
 			blockCollision = false; // reset
 		}
 
@@ -266,8 +272,31 @@ public class Ball extends ShapeDrawable {
 		for (int i = blockListLength - 1; i >= 0; i--) {
 			Rect blockRect = blocks.get(i).getBounds();
 			int color = blocks.get(i).getColor();
-
-			if (ballLeft >= blockRect.left - (radius * 2)
+			
+			if (ballLeft >= blocks.get(i).left - (radius * 2)
+					&& ballLeft <= blocks.get(i).right + (radius * 2)
+					&& (ballTop == blocks.get(i).bottom || ballTop == blocks.get(i).top)) {
+				blockCollision = true;
+				blocks.remove(i);
+			} else if (ballRight <= blocks.get(i).right
+					&& ballRight >= blocks.get(i).left
+					&& ballTop <= blocks.get(i).bottom && ballTop >= blocks.get(i).top) {
+				blockCollision = true;
+				blocks.remove(i);
+			} else if (ballLeft >= blocks.get(i).left
+					&& ballLeft <= blocks.get(i).right
+					&& ballBottom <= blocks.get(i).bottom
+					&& ballBottom >= blocks.get(i).top) {
+				blockCollision = true;
+				blocks.remove(i);
+			} else if (ballRight <= blocks.get(i).right
+					&& ballRight >= blocks.get(i).left
+					&& ballBottom <= blocks.get(i).bottom
+					&& ballBottom >= blocks.get(i).top) {
+				blockCollision = true;
+				blocks.remove(i);
+			}
+			/*if (ballLeft >= blockRect.left - (radius * 2)
 					&& ballLeft <= blockRect.right + (radius * 2)
 					&& (ballTop == blockRect.bottom || ballTop == blockRect.top)) {
 				blockCollision = true;
@@ -290,12 +319,12 @@ public class Ball extends ShapeDrawable {
 				blockCollision = true;
 				blocks.remove(i);
 			}
-
+*/
 			if (blockCollision) {
 				if (soundOn) {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
-				
+				Log.d(TAG ,"blockCollision");
 				// 这里可以添加改变颜色
 				this.getPaint().setColor(Color.BLUE);
 				return points += getPoints(color);
@@ -345,6 +374,13 @@ public class Ball extends ShapeDrawable {
 		if (velocityY >= 10) {
 
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void addBallSize(){
+		
 	}
 
 	/**

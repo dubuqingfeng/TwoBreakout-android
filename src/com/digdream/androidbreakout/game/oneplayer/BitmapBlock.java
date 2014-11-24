@@ -30,7 +30,7 @@ public class BitmapBlock extends BitmapDrawable{
 	 *            graphical canvas
 	 * */
 	public void drawBlock(Canvas canvas) {
-		this.setBounds(left, top, right, bottom);
+		//this.setBounds(left, top, right, bottom);
 		this.draw(canvas);
 	}
 

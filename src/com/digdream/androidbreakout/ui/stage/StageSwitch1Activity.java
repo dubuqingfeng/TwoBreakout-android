@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
  *
  */
 
-public class SwitchActivity extends Activity{
+public class StageSwitch1Activity extends Activity{
     SwitchLayout switchLayout;//自定义的控件
 	LinearLayout linearLayout;
 	int mViewCount;//自定义控件中子控件的个数
@@ -28,7 +28,7 @@ public class SwitchActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.mainswitch);
+        setContentView(R.layout.stage_switch1);
        
         init();
     }

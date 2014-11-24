@@ -25,6 +25,7 @@ public class StageActivity extends Activity {
 	private Button mStage6;
 	private UserPreferences preferences;
 	private View mBtnReturn;
+	public static int stage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,10 @@ public class StageActivity extends Activity {
 		preferences.init(StageActivity.this);
 		if(preferences.getLevel() == 0)
 		{
-			Intent intent = new Intent(this , com.digdream.androidbreakout.ui.SwitchActivity.class);
+			stage = 1;
+			Intent intent = new Intent(this,com.digdream.androidbreakout.ui.SwitchActivity.class);
 			startActivity(intent);
+			this.finish();
 		}
 		setContentView(R.layout.activity_stage);
 		buttonsetOnclick();
@@ -66,7 +69,7 @@ public class StageActivity extends Activity {
 				case R.id.btn_stage_1:
 					if(preferences.getLevel() >= 0 )
 					{
-						
+						stage = 1;
 					}else{
 						
 					}
@@ -74,7 +77,7 @@ public class StageActivity extends Activity {
 				case R.id.btn_stage_2:
 					if(preferences.getLevel() >= 1 )
 					{
-						
+						stage = 2;
 					}else{
 						
 					}
@@ -82,36 +85,37 @@ public class StageActivity extends Activity {
 				case R.id.btn_stage_3:
 					if(preferences.getLevel() >= 2 )
 					{
-						
+						stage = 3;
 					}else{
 						
 					}
 					break;
 				case R.id.btn_stage_4:
-					if(preferences.getLevel() >= 0 )
+					if(preferences.getLevel() >= 3 )
 					{
-						
+						stage = 4;
 					}else{
 						
 					}
 					break;
 				case R.id.btn_stage_5:
-					if(preferences.getLevel() >= 0 )
+					if(preferences.getLevel() >= 4 )
 					{
-						
+						stage = 5;
 					}else{
 						
 					}
 					break;
 				case R.id.btn_stage_6:
-					if(preferences.getLevel() >= 0 )
+					if(preferences.getLevel() >= 5 )
 					{
-						
+						stage = 6;
 					}else{
 						
 					}
 					break;
 				case R.id.btn_return:
+					break;
 				default :
 			}
 			
