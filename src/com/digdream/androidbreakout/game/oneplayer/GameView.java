@@ -65,9 +65,9 @@ public class GameView extends SurfaceView implements Runnable {
 	private BitmapDrawable bitmapDrawable;
 	private Bitmap bitmap;
 
-	private Item[] item = new Item[5];
-	Bitmap[] itembmp = new Bitmap[9];
-	Bitmap blockbmp;
+	//private Item[] item = new Item[5];
+	//Bitmap[] itembmp = new Bitmap[9];
+	//Bitmap blockbmp;
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -87,8 +87,8 @@ public class GameView extends SurfaceView implements Runnable {
 		holder = getHolder();
 		// 初始化ball球。
 		ball = new Ball(this.getContext(), soundToggle);
-		for (int k = 0; k <= 5; k++)
-			item[k] = new Item();
+		//for (int k = 0; k <= 5; k++)
+		//	item[k] = new Item();
 		paddle = new Paddle();
 		blocksList = new ArrayList<Block>();
 		// 设置背景
@@ -107,19 +107,19 @@ public class GameView extends SurfaceView implements Runnable {
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
 		
-		this.blockbmp = readBitmap(context, "chara1_block");
+		//this.blockbmp = readBitmap(context, "chara1_block");
 		//
-		int n = 0;
-		while (true) {
+		//int n = 0;
+		//while (true) {
 			
-			this.itembmp[n] = readBitmap(context, "item" + (n + 1));
-			n++;
-			if (n > 9) {
-				return;
-			}
-			continue;
+			//this.itembmp[n] = readBitmap(context, "item" + (n + 1));
+			//n++;
+			//if (n > 9) {
+			//	return;
+			//}
+			//continue;
 
-		}
+		//}
 		
 
 	}

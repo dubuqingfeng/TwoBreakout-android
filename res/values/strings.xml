@@ -9,11 +9,11 @@
     
     <string name="version">对战版</string>
     <string name="btn_audio">声音开关</string>
-    <string name="btn_1pstart">开始单人游戏</string>
-    <string name="btn_2pstart">开始双人游戏</string>
-    <string name="btn_about">关于开发者</string>
+    <string name="btn_1pstart">单人</string>
+    <string name="btn_2pstart">^_^</string>
+    <string name="btn_about">关于社长</string>
     <string name="btn_option">设置</string>
-    <string name="prepare">双人游戏准备</string>
+    <string name="prepare">双人</string>
     <string name="prepared">已准备</string>
     <string name="exit">退出</string>
     <string name="offline">对方已断开，游戏结束</string>
@@ -21,4 +21,13 @@
     <string name="please2p">请使用茄子快传工具进行双人对战</string>
     <string name="exit_text">确定要退出吗？</string>
     <string name="cancel">取消</string>
+    
+    <string name="btn_stage_1">相识</string>
+    <string name="btn_stage_2">相遇</string>
+    <string name="btn_stage_3">相知</string>
+    <string name="btn_stage_4">相恋</string>
+    <string name="btn_stage_5">相依</string>
+    <string name="btn_stage_6">相离</string>
+    
+    <string name="btn_return">返回</string>
 </resources>

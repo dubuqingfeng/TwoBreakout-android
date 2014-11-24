@@ -58,6 +58,18 @@
             android:label="@string/title_activity_breakout"
             android:screenOrientation="portrait" >
         </activity>
+           <activity
+            android:name="com.digdream.androidbreakout.ui.StageActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:label="@string/title_activity_breakout"
+            android:screenOrientation="portrait" >
+        </activity>
+           <activity
+            android:name="com.digdream.androidbreakout.ui.SwitchActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:label="@string/title_activity_breakout"
+            android:screenOrientation="portrait" >
+        </activity>
          <activity
             android:name="com.digdream.androidbreakout.ui.TestActivity"
             android:label="@string/title_activity_breakout"

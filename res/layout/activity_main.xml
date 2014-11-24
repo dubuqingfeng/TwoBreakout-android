@@ -52,15 +52,7 @@
             android:textColor="#ffffff"
             android:textSize="27sp" />
 
-        <Button
-            android:id="@+id/btn_exit"
-            android:layout_width="250dp"
-            android:layout_height="52dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/exit_button_bg"
-            android:text="@string/exit"
-            android:textSize="27sp" />
+     
     </FrameLayout>
 
 </LinearLayout>
