@@ -1,8 +1,10 @@
 package com.digdream.androidbreakout.game.oneplayer;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 
@@ -15,6 +17,9 @@ public class Block extends ShapeDrawable {
 
 	private Paint paint;
 	private int blockColor;
+	private Bitmap bitmap;
+	private float left;
+	private float top;
 
 	/**
 	 * 构造器，使用父类方法构造Gect，设置颜色
@@ -24,9 +29,27 @@ public class Block extends ShapeDrawable {
 	 * @param color 
 	 *            number representing a Color value
 	 * */
-	public Block(Rect rect, int color) {
-		super(new RectShape());
-		this.setBounds(rect);
+	public Block(Rect rect, int color,Bitmap bitmap ,float left,float top) {
+		//super(new RectShape());
+		//this.setBounds(rect);
+		paint = new Paint();
+		paint.setColor(color);
+		blockColor = color;
+	}
+	/**
+	 * 构造器，使用父类方法构造Gect，设置颜色
+	 * 
+	 * @param rect
+	 *            Android Rect object
+	 * @param color 
+	 *            number representing a Color value
+	 * */
+	public Block(int color,Bitmap bitmap ,float left,float top) {
+		//super(new RectShape());
+		//this.setBounds(rect);
+		this.bitmap = bitmap;
+		this.left = left;
+		this.top = top;
 		paint = new Paint();
 		paint.setColor(color);
 		blockColor = color;
@@ -39,7 +62,8 @@ public class Block extends ShapeDrawable {
 	 *            graphic canvas
 	 * */
 	public void drawBlock(Canvas canvas) {
-		canvas.drawRect(this.getBounds(), paint);
+		canvas.drawBitmap(bitmap,left,top,paint);
+		//canvas.drawRect(this.getBounds(), paint);
 	}
 
 	/**

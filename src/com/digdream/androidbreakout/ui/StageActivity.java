@@ -23,13 +23,15 @@ public class StageActivity extends Activity {
 	private Button mStage4;
 	private Button mStage5;
 	private Button mStage6;
+	private UserPreferences preferences;
+	private View mBtnReturn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//判断shareprefences
 		//if没有通过第一关，则跳转activity
-		UserPreferences preferences = new UserPreferences();
+		preferences = new UserPreferences();
 		preferences.init(StageActivity.this);
 		if(preferences.getLevel() == 0)
 		{
@@ -53,25 +55,63 @@ public class StageActivity extends Activity {
 		mStage5.setOnClickListener(mOnClickListener);
 		mStage6 = (Button)findViewById(R.id.btn_stage_6);
 		mStage6.setOnClickListener(mOnClickListener);
+		mBtnReturn = (Button)findViewById(R.id.btn_return);
+		mBtnReturn.setOnClickListener(mOnClickListener);
 	}
 	
 	private OnClickListener mOnClickListener = new OnClickListener(){
-
 		public void onClick(View v) {
 			switch(v.getId())
 			{
 				case R.id.btn_stage_1:
-				break;
+					if(preferences.getLevel() >= 0 )
+					{
+						
+					}else{
+						
+					}
+					break;
 				case R.id.btn_stage_2:
+					if(preferences.getLevel() >= 1 )
+					{
+						
+					}else{
+						
+					}
 					break;
 				case R.id.btn_stage_3:
+					if(preferences.getLevel() >= 2 )
+					{
+						
+					}else{
+						
+					}
 					break;
 				case R.id.btn_stage_4:
+					if(preferences.getLevel() >= 0 )
+					{
+						
+					}else{
+						
+					}
 					break;
 				case R.id.btn_stage_5:
+					if(preferences.getLevel() >= 0 )
+					{
+						
+					}else{
+						
+					}
 					break;
 				case R.id.btn_stage_6:
+					if(preferences.getLevel() >= 0 )
+					{
+						
+					}else{
+						
+					}
 					break;
+				case R.id.btn_return:
 				default :
 			}
 			

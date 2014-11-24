@@ -13,6 +13,7 @@ import com.digdream.androidbreakout.R;
 import com.lenovo.game.GameMessageListener;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -144,10 +145,10 @@ public class GameView extends SurfaceView implements Runnable {
 				bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
 						R.drawable.chara1);
 				// 设置显示大小
-				bitmapDrawable.setBounds(0, 0, 80, 80);
+				bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10), canvas.getWidth() / 18);
 				bitmap = (bitmapDrawable).getBitmap();
 				// 画出图片
-				canvas.drawBitmap(bitmap, 50, 50, null);
+				//canvas.drawBitmap(bitmap, 50, 50, null);
 				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
@@ -283,7 +284,7 @@ public class GameView extends SurfaceView implements Runnable {
 			Rect r = new Rect();
 			int[] blockNums = arr.get(i);
 			r.set(blockNums[0], blockNums[1], blockNums[2], blockNums[3]);
-			Block b = new Block(r, blockNums[4]);
+			Block b = new Block(r, blockNums[4], bitmap, blockNums[0], blockNums[1]);
 			blocksList.add(b);
 		}
 	}
@@ -328,14 +329,20 @@ public class GameView extends SurfaceView implements Runnable {
 		int topOffset = canvas.getHeight() / 10;
 		int blockWidth = (canvas.getWidth() / 10);
 
+		//Resources res=getResources();  
+		//Drawable drawable = res.getDrawable(R.drawable.num4);  
+		//实际上这是一个BitmapDrawable对象  
+		//BitmapDrawable bitmapDrawable=(BitmapDrawable)drawable;  
+		//可以在调用getBitmap方法，得到这个位图  
+		//Bitmap bitmap=bitmapDrawable.getBitmap();  
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);
 
-				Rect r = new Rect();
-				r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
-						y_coordinate + blockHeight);
+				//Rect r = new Rect();
+				//r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
+				//		y_coordinate + blockHeight);
 
 				int color;
 
@@ -350,7 +357,7 @@ public class GameView extends SurfaceView implements Runnable {
 				else
 					color = Color.LTGRAY;
 
-				Block block = new Block(r, color);
+				Block block = new Block(color,bitmap,x_coordinate,y_coordinate);
 
 				blocksList.add(block);
 			}
@@ -371,6 +378,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 	/**
 	 * 保存游戏状态。读取的砖块色和坐标转换成一个ArrayList。保存砖块，玩家分数，玩家生命数变成一个数据文件。
+	 * 每碰撞一次砖块，传输message？
 	 * */
 	private void saveGameData() {
 		ArrayList<int[]> arr = new ArrayList<int[]>();
