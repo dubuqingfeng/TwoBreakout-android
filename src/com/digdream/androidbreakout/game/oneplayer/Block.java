@@ -15,6 +15,7 @@ import android.graphics.drawable.shapes.RectShape;
  * */
 public class Block extends ShapeDrawable {
 
+	private static Bitmap blockbmp = null;
 	private Paint paint;
 	private int blockColor;
 	private Bitmap bitmap;
@@ -22,6 +23,8 @@ public class Block extends ShapeDrawable {
 	float top;
 	float right;
 	float bottom;
+	private Rect localRect1;
+	private Rect localRect2;
 
 	/**
 	 * 构造器，使用父类方法构造Gect，设置颜色
@@ -59,6 +62,17 @@ public class Block extends ShapeDrawable {
 		blockColor = color;
 	}
 
+	public Block(Rect localRect1, Rect localRect2, Bitmap blockbmp2 ,int color) {
+		this.localRect1 = localRect1;
+		this.localRect2 = localRect2;
+		this.blockbmp = blockbmp2;
+		paint = new Paint();
+		paint.setColor(color);
+		blockColor = color;
+	}
+	public Rect getRect(){
+		return localRect1;
+	}
 	/**
 	 * 绘制砖块
 	 * 
@@ -66,7 +80,9 @@ public class Block extends ShapeDrawable {
 	 *            graphic canvas
 	 * */
 	public void drawBlock(Canvas canvas) {
-		canvas.drawBitmap(bitmap,left,top,paint);
+		canvas.drawBitmap(Block.blockbmp, localRect1, localRect2,
+				null);
+		//canvas.drawBitmap(bitmap,left,top,paint);
 		//canvas.drawRect(this.getBounds(), paint);
 	}
 

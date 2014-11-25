@@ -10,6 +10,7 @@ import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import com.digdream.androidbreakout.R;
+import com.digdream.androidbreakout.ui.StageActivity;
 import com.lenovo.game.GameMessageListener;
 
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.PorterDuff.Mode;
@@ -33,6 +35,7 @@ import android.view.SurfaceView;
  */
 public class GameView extends SurfaceView implements Runnable {
 
+	private int stage;
 	private boolean showGameOverBanner = false;
 	private int levelCompleted = 0;
 	private int playerTurns;
@@ -65,12 +68,15 @@ public class GameView extends SurfaceView implements Runnable {
 	private String score = "总分  = ";
 	private BitmapDrawable bitmapDrawable;
 	private Bitmap bitmap;
-	
+	private Matrix matrix;
 	private StageData stagedata;
+	private Bitmap stagebmp;
+	private Bitmap stageeye;
+	private StageData stagemap;
+	private Bitmap blockbmp;
 
-	//private Item[] item = new Item[5];
-	//Bitmap[] itembmp = new Bitmap[9];
-	//Bitmap blockbmp;
+	// private Item[] item = new Item[5];
+	// Bitmap[] itembmp = new Bitmap[9];
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -84,14 +90,16 @@ public class GameView extends SurfaceView implements Runnable {
 	 * */
 	public GameView(Context context, int launchNewGame, boolean sound) {
 		super(context);
+		stage = StageActivity.stage;
+		stagedata = new StageData(stage);
 		startNewGame = launchNewGame; // 新游戏还是继续
 		playerTurns = PLAYER_TURNS_NUM;
 		soundToggle = sound;
 		holder = getHolder();
 		// 初始化ball球。
 		ball = new Ball(this.getContext(), soundToggle);
-		//for (int k = 0; k <= 5; k++)
-		//	item[k] = new Item();
+		// for (int k = 0; k <= 5; k++)
+		// item[k] = new Item();
 		paddle = new Paddle();
 		blocksList = new ArrayList<Block>();
 		// 设置背景
@@ -109,24 +117,28 @@ public class GameView extends SurfaceView implements Runnable {
 		getReadyPaint.setTextAlign(Paint.Align.CENTER);
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
-		
-		// 画出图片
-		//canvas.drawBitmap(bitmap, 50, 50, null);
-		
-		//this.blockbmp = readBitmap(context, "chara1_block");
-		//
-		//int n = 0;
-		//while (true) {
-			
-			//this.itembmp[n] = readBitmap(context, "item" + (n + 1));
-			//n++;
-			//if (n > 9) {
-			//	return;
-			//}
-			//continue;
 
-		//}
-		
+		this.blockbmp = readBitmap(context, "chara" + this.stage + "_block");
+		this.stagebmp = readBitmap(context, "chara" + this.stage);
+		this.stageeye = readBitmap(context, "chara" + this.stage + "_eye");
+		this.matrix = new Matrix();
+		this.matrix.postScale(0.7F, 0.7F);
+		// 画出图片
+		// canvas.drawBitmap(bitmap, 50, 50, null);
+
+		// this.blockbmp = readBitmap(context, "chara1_block");
+		//
+		// int n = 0;
+		// while (true) {
+
+		// this.itembmp[n] = readBitmap(context, "item" + (n + 1));
+		// n++;
+		// if (n > 9) {
+		// return;
+		// }
+		// continue;
+
+		// }
 
 	}
 
@@ -146,7 +158,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-				
+
 				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
@@ -194,10 +206,12 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void drawToCanvas(Canvas canvas) {
+		
 		drawBlocks(canvas);
 		paddle.drawPaddle(canvas);
 		ball.drawBall(canvas);
 	}
+	
 
 	/**
 	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。 绘制文本来提醒用户，如果球重新启动或游戏就结束了。...
@@ -218,8 +232,8 @@ public class GameView extends SurfaceView implements Runnable {
 			}
 			// paddle collision
 			ball.checkPaddleCollision(paddle);
-			// block collision and points  计数器
-			points += ball.checkBlocksCollision(blocksList);
+			// block collision and points 计数器
+			points += ball.checkBlocksCollision(blocksList,canvas);
 		}
 
 		else {
@@ -260,6 +274,7 @@ public class GameView extends SurfaceView implements Runnable {
 	 * */
 	private void initObjects(Canvas canvas) {
 		touched = false; // reset paddle location
+		canvas.drawBitmap(this.stagebmp, 0.0F, 0.0F, null);
 		ball.initCoords(canvas.getWidth(), canvas.getHeight());
 		paddle.initCoords(canvas.getWidth(), canvas.getHeight());
 		if (startNewGame == 0) {
@@ -331,38 +346,45 @@ public class GameView extends SurfaceView implements Runnable {
 		bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
 				R.drawable.item1);
 		// 设置显示大小
-		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10), canvas.getWidth() / 18);
+		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
+				canvas.getWidth() / 18);
 		bitmap = (bitmapDrawable).getBitmap();
 		/**
-		 * 这里需要读取StageData.java的数据，读取关卡的数据
-		 * 控制二维数组。
-		 * 根据stage值。
+		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
 		 */
+		
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);
-
-				//Rect r = new Rect();
-				//r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
-				//		y_coordinate + blockHeight);
-
-				int color;
-
-				if (i < 2)
-					color = Color.RED;
-				else if (i < 4)
-					color = Color.YELLOW;
-				else if (i < 6)
-					color = Color.GREEN;
-				else if (i < 8)
-					color = Color.MAGENTA;
-				else
-					color = Color.LTGRAY;
-
-				Block block = new Block(color,bitmap,x_coordinate,y_coordinate);
-
-				blocksList.add(block);
+				if (StageData.GameDataArray[i][j] == 1) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmp,color);
+					blocksList.add(block);
+				}
+				// Rect r = new Rect();
+				// r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
+				// y_coordinate + blockHeight);
+				
+			//	Block block = new Block(color, bitmap, x_coordinate,
+		//				y_coordinate);
+			//	blocksList.add(block);
 			}
 		}
 	}
@@ -374,6 +396,20 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphical canvas
 	 * */
 	private void drawBlocks(Canvas canvas) {
+		/*for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (StageData.GameDataArray[i][j] == 1) {
+					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i / 10),
+							48 + 48 * (j % 10), 16 + 16 * (i / 10));
+					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i / 10),
+							48 + 48 * (j % 10), 16 + 16 * (i / 10));
+					canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+							null);
+					
+				}
+			}
+			
+		}*/
 		for (int i = 0; i < blocksList.size(); i++) {
 			blocksList.get(i).drawBlock(canvas);
 		}
@@ -450,14 +486,15 @@ public class GameView extends SurfaceView implements Runnable {
 		}
 		return touched;
 	}
+
 	/**
 	 * 读取位图
+	 * 
 	 * @param paramContext
-	 * 		Android Context
+	 *            Android Context
 	 * @param paramString
-	 * 		path
-	 * @return
-	 * 		bitmap
+	 *            path
+	 * @return bitmap
 	 */
 
 	private static Bitmap readBitmap(Context paramContext, String paramString) {

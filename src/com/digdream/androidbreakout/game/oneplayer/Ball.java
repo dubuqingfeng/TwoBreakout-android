@@ -63,6 +63,7 @@ public class Ball extends ShapeDrawable {
 	private int blockSoundId;
 	private int bottomSoundId;
 	private final String TAG = "Ball";
+	private Bitmap[] itembmp = new Bitmap[4];
 
 	/**
 	 * 构造器。设置颜色及声音参数
@@ -94,6 +95,7 @@ public class Ball extends ShapeDrawable {
 			blockSoundId = soundPool.load(context, R.raw.block, 0);
 			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
 		}
+		this.itembmp[1] = readBitmap(context, "item1");
 	}
 
 	private static Bitmap readBitmap(Context paramContext, String paramString) {
@@ -153,6 +155,10 @@ public class Ball extends ShapeDrawable {
 		this.setBounds(left, top, right, bottom);
 		this.draw(canvas);
 	}
+	
+	public void drawItem(Canvas canvas,Item item) {
+		item.drawItem(canvas);
+	}
 
 	/**
 	 * 更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值使用递减生命数。
@@ -161,12 +167,11 @@ public class Ball extends ShapeDrawable {
 	 * */
 	public int setVelocity() {
 		int bottomHit = 0;
-		/
+
 		if (blockCollision) {
-			//如果有闪光球，不执行条件句
-			if(!strongflag)
-			{
-			velocityY = -velocityY;
+			// 如果有闪光球，不执行条件句
+			if (!strongflag) {
+				velocityY = -velocityY;
 			}
 			blockCollision = false; // reset
 		}
@@ -258,7 +263,7 @@ public class Ball extends ShapeDrawable {
 	 * 
 	 * @return points total from blocks
 	 * */
-	public int checkBlocksCollision(ArrayList<Block> blocks) {
+	public int checkBlocksCollision(ArrayList<Block> blocks,Canvas canvas) {
 		int points = 0;
 		int blockListLength = blocks.size();
 		ballRect = this.getBounds();
@@ -270,33 +275,26 @@ public class Ball extends ShapeDrawable {
 
 		// check collision; remove block if true
 		for (int i = blockListLength - 1; i >= 0; i--) {
-			Rect blockRect = blocks.get(i).getBounds();
+			Rect blockRect = blocks.get(i).getRect();
 			int color = blocks.get(i).getColor();
-			
-			if (ballLeft >= blocks.get(i).left - (radius * 2)
-					&& ballLeft <= blocks.get(i).right + (radius * 2)
-					&& (ballTop == blocks.get(i).bottom || ballTop == blocks.get(i).top)) {
-				blockCollision = true;
-				blocks.remove(i);
-			} else if (ballRight <= blocks.get(i).right
-					&& ballRight >= blocks.get(i).left
-					&& ballTop <= blocks.get(i).bottom && ballTop >= blocks.get(i).top) {
-				blockCollision = true;
-				blocks.remove(i);
-			} else if (ballLeft >= blocks.get(i).left
-					&& ballLeft <= blocks.get(i).right
-					&& ballBottom <= blocks.get(i).bottom
-					&& ballBottom >= blocks.get(i).top) {
-				blockCollision = true;
-				blocks.remove(i);
-			} else if (ballRight <= blocks.get(i).right
-					&& ballRight >= blocks.get(i).left
-					&& ballBottom <= blocks.get(i).bottom
-					&& ballBottom >= blocks.get(i).top) {
-				blockCollision = true;
-				blocks.remove(i);
-			}
-			/*if (ballLeft >= blockRect.left - (radius * 2)
+
+			/*
+			 * if (ballLeft >= blocks.get(i).left - (radius * 2) && ballLeft <=
+			 * blocks.get(i).right + (radius * 2) && (ballTop ==
+			 * blocks.get(i).bottom || ballTop == blocks.get(i).top)) {
+			 * blockCollision = true; blocks.remove(i); } else if (ballRight <=
+			 * blocks.get(i).right && ballRight >= blocks.get(i).left && ballTop
+			 * <= blocks.get(i).bottom && ballTop >= blocks.get(i).top) {
+			 * blockCollision = true; blocks.remove(i); } else if (ballLeft >=
+			 * blocks.get(i).left && ballLeft <= blocks.get(i).right &&
+			 * ballBottom <= blocks.get(i).bottom && ballBottom >=
+			 * blocks.get(i).top) { blockCollision = true; blocks.remove(i); }
+			 * else if (ballRight <= blocks.get(i).right && ballRight >=
+			 * blocks.get(i).left && ballBottom <= blocks.get(i).bottom &&
+			 * ballBottom >= blocks.get(i).top) { blockCollision = true;
+			 * blocks.remove(i); }
+			 */
+			if (ballLeft >= blockRect.left - (radius * 2)
 					&& ballLeft <= blockRect.right + (radius * 2)
 					&& (ballTop == blockRect.bottom || ballTop == blockRect.top)) {
 				blockCollision = true;
@@ -319,21 +317,21 @@ public class Ball extends ShapeDrawable {
 				blockCollision = true;
 				blocks.remove(i);
 			}
-*/
+
 			if (blockCollision) {
 				if (soundOn) {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
-				Log.d(TAG ,"blockCollision");
+				Log.d(TAG, "blockCollision");
 				// 这里可以添加改变颜色
 				this.getPaint().setColor(Color.BLUE);
+				
 				return points += getPoints(color);
 			}
+			
 		}
 		return points;
 	}
-	
-	
 
 	private static int rand(int paramInt) {
 		return (rand.nextInt() >>> 1) % paramInt;
@@ -375,12 +373,12 @@ public class Ball extends ShapeDrawable {
 
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
-	public void addBallSize(){
-		
+	public void addBallSize() {
+
 	}
 
 	/**
@@ -414,6 +412,15 @@ public class Ball extends ShapeDrawable {
 	 * */
 	public int getVelocityY() {
 		return velocityY;
+	}
+
+	/**
+	 * 返回球的当前x速度值
+	 * 
+	 * @return current X velocity of the ball
+	 */
+	public int getVelocityX() {
+		return velocityX;
 	}
 
 	/**
