@@ -7,9 +7,9 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 
 /**
- * Represents a single game block object. Extends a ShapeDrawable to include a
- * Color value and a method for exporting the coordinates and color in order to
- * save its state.
+ * 这是一个玩家的砖块类
+ * 
+ * 代表一个游戏的砖块对象。延伸的ShapeDrawable为包括颜色值和出口，以便在坐标和颜色的方法保存其状态。
  * */
 public class Block extends ShapeDrawable {
 
@@ -17,8 +17,7 @@ public class Block extends ShapeDrawable {
 	private int blockColor;
 
 	/**
-	 * Constructor. Uses the superclass to construct the Rect and adds a color
-	 * value.
+	 * 构造器，使用父类方法构造Gect，设置颜色
 	 * 
 	 * @param rect
 	 *            Android Rect object
@@ -34,7 +33,7 @@ public class Block extends ShapeDrawable {
 	}
 
 	/**
-	 * Draws the block to a screen canvas.
+	 *  绘制砖块
 	 * 
 	 * @param canvas
 	 *            graphic canvas
@@ -44,7 +43,7 @@ public class Block extends ShapeDrawable {
 	}
 
 	/**
-	 * Returns the integer representing the block's color.
+	 * 返回颜色值
 	 * 
 	 * @return color value
 	 * */
@@ -53,10 +52,7 @@ public class Block extends ShapeDrawable {
 	}
 
 	/***
-	 * Returns an integer array containing the color and coordinates of the
-	 * block. Used to save a block's state to a data file. The first four values
-	 * represent the block's coordinates. The last value is the block's color.
-	 * 
+	 * 返回包含颜色的整型数组和坐标的砖块。用于一个砖块的状态保存到数组中。前四个值表示该砖块的坐标。最后一个值是砖块的颜色。
 	 * @return integer array containing the block's coordinates and color values.
 	 * */
 	public int[] toIntArray() {

@@ -5,15 +5,14 @@
     <string name="cont">Continue Game</string>
     <string name="sound">Sound</string>
     <string name="score"></string>
-    <string name="source"><u>View Source On GitHub</u></string>
     
     <string name="version">对战版</string>
     <string name="btn_audio">声音开关</string>
-    <string name="btn_1pstart">单人</string>
+    <string name="btn_1pstart">单人剧情模式</string>
     <string name="btn_2pstart">^_^</string>
-    <string name="btn_about">关于社长</string>
+    <string name="btn_about">前尘忆梦</string>
     <string name="btn_option">设置</string>
-    <string name="prepare">双人</string>
+    <string name="prepare">双人对战</string>
     <string name="prepared">已准备</string>
     <string name="exit">退出</string>
     <string name="offline">对方已断开，游戏结束</string>

@@ -3,8 +3,8 @@ package com.digdream.androidbreakout.game.oneplayer;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.digdream.androidbreakout.GameView2p;
 import com.digdream.androidbreakout.R;
+import com.digdream.androidbreakout.game.twoplayer.GameView2p;
 
 import android.content.Context;
 import android.graphics.Bitmap;

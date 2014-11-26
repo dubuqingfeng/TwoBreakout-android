@@ -1,6 +1,7 @@
 package com.digdream.androidbreakout.game.oneplayer;
 
-import com.digdream.androidbreakout.GameView2p;
+
+import com.digdream.androidbreakout.game.twoplayer.GameView2p;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

@@ -15,24 +15,25 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 /**
- * Represents a game ball. Responsible for drawing the ball, updating the ball's
- * position, collision checking, sound events, and point scoring.
+ * 这是一个玩家的小球类。 增大半径，增加球，强壮球，遇到挡板砖块更改颜色，控制球速，增加球速，减慢球速，球初始位置和速度
+ * 
+ * 小球以立体球代替。。 负责绘制球，更新球的位置，碰撞检测，声音事件和得分点。
  * 
  * */
 public class Ball2p extends ShapeDrawable {
 
-	// ball dimensions
+	// 小球位置
 	private int left;
 	private int right;
 	private int top;
 	private int bottom;
 	private int radius;
 
-	// ball speed
+	// 球的速度
 	private int velocityX;
 	private int velocityY;
 
-	// timer when ball hits screen bottom
+	// 当球击中屏幕底部的计时
 	private final int resetBallTimer = 1000;
 
 	private int SCREEN_WIDTH;
@@ -51,7 +52,7 @@ public class Ball2p extends ShapeDrawable {
 	private int bottomSoundId;
 
 	/**
-	 * Constructor. Sets the Paint and sound parameters.
+	 * 构造器。设置颜色及声音参数.
 	 * 
 	 * @param context
 	 *            Android context
@@ -72,9 +73,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Initializes ball parameters. Calculates the ball's dimensions according
-	 * to the screen's width and height. Sets a starting velocity. Randomly
-	 * chooses whether the ball moves right or left at start.
+	 * 初始化球参数。计算，根据球的尺寸屏幕的宽度和高度。设置一个起始速度。随机选择球是否移动向左或向右的开始。
 	 * 
 	 * @param width
 	 *            screen width
@@ -94,7 +93,7 @@ public class Ball2p extends ShapeDrawable {
 		velocityX = radius;
 		velocityY = radius * 2;
 
-		// ball coordinates
+		//ball coordinates 球坐标
 		left = (SCREEN_WIDTH / 2) - radius;
 		right = (SCREEN_WIDTH / 2) + radius;
 		top = (SCREEN_HEIGHT / 2) - radius;
@@ -114,7 +113,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Draws ball to canvas.
+	 * 绘制球
 	 * 
 	 * @param canvas
 	 *            graphical canvas
@@ -125,10 +124,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Updates the ball's coordinates. If there is a collision, the direction of
-	 * the ball's velocity is changed. Returns an integer depending on whether
-	 * the ball collides with the bottom of the screen. The return value is used
-	 * to decrement player turns.
+	 * 更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值使用递减生命数。
 	 * 
 	 * @return number to decrement player turns
 	 * */
@@ -140,7 +136,7 @@ public class Ball2p extends ShapeDrawable {
 			blockCollision = false; // reset
 		}
 
-		// paddle collision
+		// 挡板碰撞
 		if (paddleCollision && velocityY > 0) {
 			int paddleSplit = (mPaddle.right - mPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
@@ -155,7 +151,7 @@ public class Ball2p extends ShapeDrawable {
 			}
 			velocityY = -velocityY;
 		}
-		// paddle collision
+		// side walls collision侧壁碰撞
 		if (topPaddleCollision && velocityY < 0) {
 			int toppaddleSplit = (mTopPaddle.right - mTopPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
@@ -171,7 +167,7 @@ public class Ball2p extends ShapeDrawable {
 			velocityY = -velocityY;
 		}
 
-		// side walls collision
+		//// side walls collision
 		if (this.getBounds().right >= SCREEN_WIDTH) {
 			velocityX = -velocityX;
 		} else if (this.getBounds().left <= 0) {
@@ -205,8 +201,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Checks if the ball has collided with the paddle. Plays a sound effect if
-	 * there is a collision and sound is enabled.
+	 *检查是否球已经撞上了挡板。音效如果声音效果有碰撞和声音被启用。
 	 * 
 	 * @param paddle
 	 *            paddle object
@@ -250,10 +245,8 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Checks for a ball collision with each block in an ArrayList. If there is
-	 * a collision, the point value of the block is added to a points total. If
-	 * sound is enabled, a sound effect will play on collision. If there is a
-	 * collision, blockCollision is set to true for the setVelocity method.
+	 *  * 检查在一个ArrayList每块与球的碰撞。如果有发生碰撞时，该块的点的值被添加到一个总点数。如果启用音效，声音效果会碰撞。如果有一个碰撞，
+	 * blockCollision被设置为true 。
 	 * 
 	 * @param blocks
 	 *            ArrayList of block objects
@@ -310,7 +303,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Returns the point value of a block based on color.
+	 * 返回一个基于颜色的块的分数。
 	 * 
 	 * @param color
 	 *            block color
@@ -334,7 +327,7 @@ public class Ball2p extends ShapeDrawable {
 	}
 
 	/**
-	 * Returns the current Y velocity value of the ball.
+	 * 返回球的当前y速度值。
 	 * 
 	 * @return current Y velocity of the ball
 	 * */

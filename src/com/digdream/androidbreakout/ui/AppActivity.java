@@ -2,9 +2,8 @@ package com.digdream.androidbreakout.ui;
 
 import org.json.JSONException;
 
-import com.digdream.androidbreakout.Breakout;
-import com.digdream.androidbreakout.GameView2p;
 import com.digdream.androidbreakout.R;
+import com.digdream.androidbreakout.game.twoplayer.GameView2p;
 import com.digdream.androidbreakout.module.GameData;
 import com.digdream.androidbreakout.module.GameMessages;
 import com.digdream.androidbreakout.module.GameMessages.AbstractGameMessage;
@@ -251,7 +250,7 @@ public class AppActivity extends BaseActivity {
 
 	private void startGame() {
 		Intent intent = new Intent(AppActivity.this,
-				com.digdream.androidbreakout.Breakout2p.class);
+				com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
 		intent.putExtra(NEW_GAME, newGame);
 		intent.putExtra(SOUND_ON_OFF, sound);
 		startActivity(intent);

@@ -44,7 +44,7 @@ public class UserPreferences {
 	
 	public void saveLevel(int level){
 		Editor editor = userPreferences.edit();
-		int flevel = level;
+		//int flevel = level;
 		editor.putInt(USERLEVEL, level);
 		editor.commit();
 	}

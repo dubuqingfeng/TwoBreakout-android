@@ -6,8 +6,9 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 
 /**
- * Represents the game paddle. Extends a ShapeDrawable to include a color value
- * and methods for setting the paddle's location on screen.
+ * 这是一个玩家的挡板类
+ * 扩展增加挡板的长度
+ * 代表游戏的挡板。延伸一个ShapeDrawable包括一个颜色值和用于在屏幕上设置挡板的定位方法。
  * */
 public class TopPaddle extends ShapeDrawable {
 
@@ -25,8 +26,7 @@ public class TopPaddle extends ShapeDrawable {
 	private int SCREEN_HEIGHT;
 
 	/**
-	 * Constructor. Calls the constructor of the super class and sets color
-	 * value.
+	 * 构造器。调用父类方法并设置颜色值
 	 * 
 	 * */
 	public TopPaddle() {
@@ -35,8 +35,7 @@ public class TopPaddle extends ShapeDrawable {
 	}
 
 	/**
-	 * Sets the paddle's dimensions and coordinates based on screen width and
-	 * height.
+	 * 挡板的尺寸和坐标基于屏幕的宽度和高度。
 	 * 
 	 * @param width
 	 *            screen width
@@ -68,7 +67,7 @@ public class TopPaddle extends ShapeDrawable {
 	}
 
 	/**
-	 * Draws the paddle to a canvas.
+	 * 绘制挡板
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -79,8 +78,7 @@ public class TopPaddle extends ShapeDrawable {
 	}
 
 	/**
-	 * Sets the paddle's coordinates. The paddle may move across the screen
-	 * along the x axis only.
+	 * 设置挡板的坐标。该挡板可以在屏幕上移动仅沿x轴。
 	 * 
 	 * @param x
 	 *            x axis value of touch event. Used to calculate the center of

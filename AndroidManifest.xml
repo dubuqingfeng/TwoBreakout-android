@@ -28,24 +28,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.digdream.androidbreakout.Breakout"
-            android:label="@string/title_activity_breakout"
-            android:theme="@style/withBackgroundTitleLevel1"  
-            android:screenOrientation="portrait" >
-        </activity>
+       
         <activity
             android:name="com.digdream.androidbreakout.game.oneplayer.Breakout"
             android:label="@string/title_activity_breakout"
             android:theme="@style/withBackgroundTitleLevel1"  
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="com.digdream.androidbreakout.Breakout2p"
-            android:label="@string/title_activity_breakout"
-            android:theme="@style/withBackgroundTitleLevel1"  
-            android:screenOrientation="portrait" >
-        </activity>
+       
         <activity
             android:name="com.digdream.androidbreakout.game.twoplayer.Breakout2p"
             android:label="@string/title_activity_breakout"
@@ -70,16 +60,16 @@
             android:label="@string/title_activity_breakout"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.digdream.androidbreakout.ui.ResultActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:label="@string/title_activity_breakout"
+            android:screenOrientation="portrait" >
+        </activity>
          <activity
             android:name="com.digdream.androidbreakout.ui.TestActivity"
             android:label="@string/title_activity_breakout"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.digdream.androidbreakout.Splash"
-            android:label="@string/title_activity_breakout"
-            android:screenOrientation="portrait" >
-            
         </activity>
         <activity
             android:name="com.digdream.androidbreakout.ui.AboutActivity"

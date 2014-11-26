@@ -90,7 +90,7 @@ public class Ball extends ShapeDrawable {
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 
-		radius = SCREEN_WIDTH / 72;
+		radius = SCREEN_WIDTH / 48;
 		velocityX = radius;
 		velocityY = radius * 2;
 
@@ -193,10 +193,10 @@ public class Ball extends ShapeDrawable {
 		}
 
 		// move ball
-		left += velocityX;
-		right += velocityX;
-		top += velocityY;
-		bottom += velocityY;
+		left += velocityX / 2;
+		right += velocityX / 2;
+		top += velocityY / 2;
+		bottom += velocityY / 2;
 
 		return bottomHit;
 	}

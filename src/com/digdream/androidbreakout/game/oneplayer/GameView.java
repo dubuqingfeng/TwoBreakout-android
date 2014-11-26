@@ -10,6 +10,7 @@ import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import com.digdream.androidbreakout.R;
+import com.digdream.androidbreakout.data.UserPreferences;
 import com.digdream.androidbreakout.ui.StageActivity;
 import com.lenovo.game.GameMessageListener;
 
@@ -162,9 +163,14 @@ public class GameView extends SurfaceView implements Runnable {
 				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
-					checkSize = true;
+					//过关的处理方法。
+					UserPreferences preferences = new UserPreferences();
+					preferences.init(getContext());
+					preferences.saveLevel(stage);
+					//checkSize = true;
 					newGame = true;
 					levelCompleted++;
+					
 				}
 
 				if (checkSize) {
@@ -254,7 +260,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * 重置变量预示着新的游戏。删除剩余的砖块列表。当运行看到砖块列表是空的，它会启动新的游戏板
+	 * 重置变量预示着新的游戏。删除剩余的砖块列表。当运行看到砖块列表是空的，它会启动新的游戏
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -267,7 +273,7 @@ public class GameView extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * 初始化图形对象。恢复比赛状态，如果现有的游戏继续
+	 * 初始化图形对象。恢复状态，如果现有的游戏继续
 	 * 
 	 * @param canvas
 	 *            graphical canvas

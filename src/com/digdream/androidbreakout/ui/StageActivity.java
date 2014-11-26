@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * 这是单人剧情模式的activity，如果没有通过第一关，通过图片滑动的动画，进行第一关。
@@ -70,6 +71,10 @@ public class StageActivity extends Activity {
 					if(preferences.getLevel() >= 0 )
 					{
 						stage = 1;
+						Intent intent = new Intent();
+						intent.setClass(getApplicationContext(), com.digdream.androidbreakout.ui.SwitchActivity.class);
+						startActivity(intent);
+						com.digdream.androidbreakout.ui.StageActivity.this.finish();
 					}else{
 						
 					}
@@ -78,8 +83,13 @@ public class StageActivity extends Activity {
 					if(preferences.getLevel() >= 1 )
 					{
 						stage = 2;
+						Intent intent = new Intent();
+						intent.setClass(getApplicationContext(), com.digdream.androidbreakout.ui.SwitchActivity.class);
+						startActivity(intent);
+						com.digdream.androidbreakout.ui.StageActivity.this.finish();
+						//跳转到第二关
 					}else{
-						
+						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case R.id.btn_stage_3:
@@ -87,7 +97,7 @@ public class StageActivity extends Activity {
 					{
 						stage = 3;
 					}else{
-						
+						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case R.id.btn_stage_4:
@@ -95,7 +105,7 @@ public class StageActivity extends Activity {
 					{
 						stage = 4;
 					}else{
-						
+						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case R.id.btn_stage_5:
@@ -103,7 +113,7 @@ public class StageActivity extends Activity {
 					{
 						stage = 5;
 					}else{
-						
+						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case R.id.btn_stage_6:
@@ -111,7 +121,7 @@ public class StageActivity extends Activity {
 					{
 						stage = 6;
 					}else{
-						
+						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				case R.id.btn_return:

@@ -60,7 +60,7 @@ public class LevelChooseActivity extends BaseActivity {
 				mGameShare.sendMessage(msg);
 				//这里同时进入游戏
 				Intent intent = new Intent(LevelChooseActivity.this,
-						com.digdream.androidbreakout.Breakout2p.class);
+						com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
 				startActivity(intent);
 				LevelChooseActivity.this.finish();
 				break;
