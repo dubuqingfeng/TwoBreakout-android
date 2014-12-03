@@ -69,6 +69,13 @@ public class AppActivity extends BaseActivity {
 		
 		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
 		sound = soundSettings.getBoolean("soundOn", true);
+		if(sound){
+			//πÿ±’…˘“Ù
+			mAudioBtn.setBackgroundResource(R.drawable.button_sound_on);
+		}
+		else{
+			mAudioBtn.setBackgroundResource(R.drawable.button_sound_off);
+		}
 		
 		Intent intent = getIntent();
 		int mode = 1;
@@ -285,7 +292,7 @@ public class AppActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
+		/*SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
 		sound = soundSettings.getBoolean("soundOn", true);
 		if(sound){
 			//πÿ±’…˘“Ù
@@ -299,7 +306,7 @@ public class AppActivity extends BaseActivity {
 		SharedPreferences soundSettingsresume = getSharedPreferences(SOUND_PREFS, 0);
 		SharedPreferences.Editor soundEditorresume = soundSettingsresume.edit();
 		soundEditorresume.putBoolean("soundOn", sound);
-		soundEditorresume.commit();
+		soundEditorresume.commit();*/
 	}
 
 }

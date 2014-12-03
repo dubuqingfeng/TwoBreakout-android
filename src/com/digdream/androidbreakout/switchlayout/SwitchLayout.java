@@ -181,12 +181,15 @@ public class SwitchLayout extends ViewGroup {
 				System.out.println("-----------");
 				Activity activity = (Activity) context;
 				Intent intent = new Intent();
-				switch(StageActivity.stage)
+				intent.putExtra("stage", StageActivity.stage);
+				intent.setClass(context, com.digdream.androidbreakout.game.oneplayer.Breakout.class);
+				/*switch(StageActivity.stage)
 				{
 				case 1:
 					intent.setClass(context, com.digdream.androidbreakout.game.oneplayer.Breakout.class);
 					break;
 				case 2:
+					intent.setClass(context, com.digdream.androidbreakout.game.oneplayer.Breakout.class);
 					break;
 				case 3:
 					break;
@@ -194,7 +197,7 @@ public class SwitchLayout extends ViewGroup {
 					break;
 				default:
 				}
-            	
+            	*/
             	//intent.putExtra(NEW_GAME, newGame);
 				//intent.putExtra(SOUND_ON_OFF, sound);
             	context.startActivity(intent);

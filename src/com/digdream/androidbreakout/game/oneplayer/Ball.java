@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.digdream.androidbreakout.R;
+import com.digdream.androidbreakout.data.UserPreferences;
 import com.digdream.androidbreakout.game.twoplayer.GameView2p;
 
 import android.content.Context;
@@ -64,6 +65,7 @@ public class Ball extends ShapeDrawable {
 	private int bottomSoundId;
 	private final String TAG = "Ball";
 	private Bitmap[] itembmp = new Bitmap[4];
+	private UserPreferences preferences;
 
 	/**
 	 * 构造器。设置颜色及声音参数
@@ -96,6 +98,9 @@ public class Ball extends ShapeDrawable {
 			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
 		}
 		this.itembmp[1] = readBitmap(context, "item1");
+		
+		preferences = new UserPreferences();
+		preferences.init(context);
 	}
 
 	private static Bitmap readBitmap(Context paramContext, String paramString) {
@@ -215,12 +220,13 @@ public class Ball extends ShapeDrawable {
 				e.printStackTrace();
 			}
 		}
-
+		
+		int velocity = preferences.getOneVelocity();
 		// move ball
-		left += velocityX / 2;
-		right += velocityX / 2;
-		top += velocityY / 2;
-		bottom += velocityY / 2;
+		left += velocityX / 2 / velocity;
+		right += velocityX / 2 / velocity;
+		top += velocityY / 2 / velocity;
+		bottom += velocityY / 2 / velocity;
 
 		return bottomHit;
 	}
@@ -298,24 +304,40 @@ public class Ball extends ShapeDrawable {
 					&& ballLeft <= blockRect.right + (radius * 2)
 					&& (ballTop == blockRect.bottom || ballTop == blockRect.top)) {
 				blockCollision = true;
-				blocks.remove(i);
+				if(blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2){
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballRight <= blockRect.right
 					&& ballRight >= blockRect.left
 					&& ballTop <= blockRect.bottom && ballTop >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if(blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2){
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballLeft >= blockRect.left
 					&& ballLeft <= blockRect.right
 					&& ballBottom <= blockRect.bottom
 					&& ballBottom >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if(blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2){
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballRight <= blockRect.right
 					&& ballRight >= blockRect.left
 					&& ballBottom <= blockRect.bottom
 					&& ballBottom >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if(blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2){
+					blocks.get(i).changeBlockState();
+				}
 			}
 
 			if (blockCollision) {

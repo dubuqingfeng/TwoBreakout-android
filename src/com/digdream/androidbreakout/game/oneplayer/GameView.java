@@ -15,6 +15,7 @@ import com.digdream.androidbreakout.ui.StageActivity;
 import com.lenovo.game.GameMessageListener;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +33,7 @@ import android.view.SurfaceView;
 
 /**
  * 创建并绘制图形的游戏。运行一个线程用于动画和游戏物理。保存并暂停或恢复时恢复游戏数据。
+ * 需要确定分辨率。。
  * 
  */
 public class GameView extends SurfaceView implements Runnable {
@@ -57,6 +59,7 @@ public class GameView extends SurfaceView implements Runnable {
 	private Canvas canvas;
 	private boolean checkSize = true;
 	private boolean newGame = true;
+	private boolean successstate = true;
 	private int waitCount = 0;
 	// ball应改为数组
 	private Ball ball;
@@ -104,7 +107,15 @@ public class GameView extends SurfaceView implements Runnable {
 		paddle = new Paddle();
 		blocksList = new ArrayList<Block>();
 		// 设置背景
-		setBackgroundResource(R.drawable.chara1);
+		switch(stage){
+			case 1:setBackgroundResource(R.drawable.chara1);break;
+			case 2:setBackgroundResource(R.drawable.chara2);break;
+			case 3:setBackgroundResource(R.drawable.chara3);break;
+			case 4:setBackgroundResource(R.drawable.chara4);break;
+			case 5:setBackgroundResource(R.drawable.chara5);break;
+			case 6:setBackgroundResource(R.drawable.chara6);break;
+		}
+		//setBackgroundResource(R.drawable.chara1);
 		scorePaint = new Paint();
 		scorePaint.setColor(Color.WHITE);
 		scorePaint.setTextSize(25);
@@ -170,7 +181,13 @@ public class GameView extends SurfaceView implements Runnable {
 					//checkSize = true;
 					newGame = true;
 					levelCompleted++;
-					
+					successstate = true;
+					//跳转activity
+					Intent intent = new Intent(getContext(),com.digdream.androidbreakout.ui.ResultActivity.class);
+					intent.putExtra("stage", stage);
+					intent.putExtra("score", points);
+					intent.putExtra("state", successstate);
+					this.getContext().startActivity(intent);
 				}
 
 				if (checkSize) {
@@ -244,6 +261,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 		else {
 			if (showGameOverBanner) {
+				successstate = false;
 				// 跳转到结果activity
 				getReadyPaint.setColor(Color.RED);
 				canvas.drawText("游戏结束!!!", canvas.getWidth() / 2,
@@ -338,7 +356,7 @@ public class GameView extends SurfaceView implements Runnable {
 	/**
 	 * 初始化块。canvas的宽度和高度尺寸和砖块的坐标。设置颜色取决于砖块的行。添加砖块到一个ArrayList。
 	 * 
-	 * 
+	 *
 	 * @param canvas
 	 *            graphics canvas
 	 * */
@@ -357,6 +375,7 @@ public class GameView extends SurfaceView implements Runnable {
 		bitmap = (bitmapDrawable).getBitmap();
 		/**
 		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
+		 * 读取关卡数据，值为2时需打两次。。。
 		 */
 		
 		for (int i = 0; i < 10; i++) {
@@ -382,6 +401,27 @@ public class GameView extends SurfaceView implements Runnable {
 					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
 						//	null);
 					Block block = new Block(localRect1, localRect2, blockbmp,color);
+					blocksList.add(block);
+				}
+				if(StageData.GameDataArray[i][j] == 2) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmp,color,2);
 					blocksList.add(block);
 				}
 				// Rect r = new Rect();

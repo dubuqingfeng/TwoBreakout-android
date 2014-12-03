@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 /**
  * 这是设置的activity，设置一些声音，挡板颜色。
@@ -22,6 +23,7 @@ public class OptionActivity extends BaseActivity{
 	private boolean sound;
 	private static final String SOUND_PREFS = "SOUND_PREFS";
 	private final String SOUND_ON_OFF = "SOUND_ON_OFF";
+	private ProgressBar mVelocityProgressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class OptionActivity extends BaseActivity{
 	private void init() {
 		//控制声音开关
 		mBtnAudio = (Button)findViewById(R.id.btn_audio);
+		//控制单人模式速度
+		mVelocityProgressBar = (ProgressBar) findViewById(R.id.velocityprogressBar);
+		//mVelocityProgressBar.getProgress();
 		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
 		sound = soundSettings.getBoolean("soundOn", true);
 		if(sound){

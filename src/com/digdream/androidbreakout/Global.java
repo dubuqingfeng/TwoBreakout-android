@@ -7,4 +7,5 @@ public class Global {
 	public static int topscore;
 	public static int score;
 
+	public static String username;
 }

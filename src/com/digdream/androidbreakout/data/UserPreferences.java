@@ -7,6 +7,7 @@ import android.util.Base64;
 
 /**
  * 这是保存用户的关卡，过关记录，用户名等信息
+ * 用户通过的关卡，总分，名字，单人剧情模式速度
  * 使用SharePreferences
  * 
  * @author user
@@ -25,6 +26,8 @@ public class UserPreferences {
 	private final String ICON_HEAD = "";
 	
 	private final String USERLEVEL = "";
+	private final String USERSCORE = "userscore";
+	private final String USERVELOCITY = "uservelocity";
 
 	/**
 	 * 初始化SharePreferences
@@ -36,7 +39,10 @@ public class UserPreferences {
 
 		}
 	}
-	
+	/**
+	 * 通过的关卡
+	 * @return
+	 */
 	public int getLevel(){
 		int flevel = userPreferences.getInt(USERLEVEL , 0);
 		return flevel;
@@ -48,7 +54,24 @@ public class UserPreferences {
 		editor.putInt(USERLEVEL, level);
 		editor.commit();
 	}
+	/**
+	 * 总分
+	 * @return
+	 */
+	public int getScore(){
+		int fscore = userPreferences.getInt(USERSCORE, 0);
+		return fscore;
+	}
 
+	public void saveScore(int score){
+		Editor editor = userPreferences.edit();
+		editor.putInt(USERSCORE , score);
+		editor.commit();
+	}
+	/**
+	 * 名字
+	 * @param name
+	 */
 	public void saveName(String name) {
 		Editor editor = userPreferences.edit();
 		String fName = new String(
@@ -60,6 +83,19 @@ public class UserPreferences {
 	public String getName() {
 		String fName = userPreferences.getString(USERNAME, "");
 		return new String(Base64.decode(fName, Base64.DEFAULT));
+	}
+	/**
+	 * 单人模式速度
+	 * @return
+	 */
+	public int getOneVelocity(){
+		int velocity = userPreferences.getInt(USERVELOCITY, 1);
+		return velocity;
+	}
+	public void saveOneVelocity(int velocity){
+		Editor editor = userPreferences.edit();
+		editor.putInt(USERVELOCITY, velocity);
+		editor.commit();
 	}
 
 	public void savePWD(String password) {

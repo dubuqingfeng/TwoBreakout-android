@@ -14,6 +14,7 @@ import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -97,6 +98,21 @@ public class Breakout2p extends BaseActivity {
 		super.onResume();
 		gameView.resume();
 	}
+	/**
+	 * ÷ÿ–¥onKeyDown
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			//Ω· ¯
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	/**
+	 * 
+	 * @param eventX
+	 */
 
 	public static void sendMessage(float eventX) {
 		// ∑¢ÀÕmessage

@@ -6,6 +6,7 @@ import android.graphics.drawable.ShapeDrawable;
 
 /**
  * 自定义的落物类，当打击砖块以后，从上到下，掉落物体，并判断与挡板是否接触。
+ * 落物，判断Itemflg，决定状态。
  * @author user
  *
  */
@@ -39,7 +40,15 @@ public class Item extends ShapeDrawable{
 				null);
 	}
 	void setVelocityY(){
-		
 		this.Y += velocityY /2; 
 	}
+	/**
+	 * itemflg  
+	 * 1 	增大挡板
+	 * 2	减小挡板
+	 * 3	增加速度
+	 * 4 	减小速度
+	 * 5 	strong球
+	 * 6 	
+	 */
 }

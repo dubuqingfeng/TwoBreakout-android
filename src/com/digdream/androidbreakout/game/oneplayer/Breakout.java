@@ -31,6 +31,7 @@ public class Breakout extends Activity {
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		Intent intent = getIntent();
 		int newGame = intent.getIntExtra("NEW_GAME", 1);
+		int stage = intent.getIntExtra("stage", 1);
 		sound = intent.getBooleanExtra("SOUND_ON_OFF", true);
 
 		// fullscreen

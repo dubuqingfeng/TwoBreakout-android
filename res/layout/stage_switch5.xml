@@ -13,12 +13,12 @@
     	<LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:background="@drawable/stage1a"/>
+    	android:background="@drawable/stage5a"/>
     	
     	<LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:background="@drawable/stage2b"/>
+    	android:background="@drawable/stage5b"/>
     	
     </com.digdream.androidbreakout.switchlayout.SwitchLayout>
     

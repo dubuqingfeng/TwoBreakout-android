@@ -106,7 +106,9 @@ public class BaseActivity extends Activity implements Bindlistener {
 		});
 		builder.create().show();
 	}
-
+	/**
+	 * 展示退出的对话框，需修改样式。
+	 */
 	protected void showExitDialog() {
 		AlertDialog.Builder builder = new Builder(BaseActivity.this);
 		builder.setMessage(R.string.exit_text);

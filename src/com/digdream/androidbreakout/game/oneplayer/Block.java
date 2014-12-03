@@ -25,6 +25,7 @@ public class Block extends ShapeDrawable {
 	float bottom;
 	private Rect localRect1;
 	private Rect localRect2;
+	private int state = 1;
 
 	/**
 	 * 构造器，使用父类方法构造Gect，设置颜色
@@ -70,6 +71,16 @@ public class Block extends ShapeDrawable {
 		paint.setColor(color);
 		blockColor = color;
 	}
+	public Block(Rect localRect12, Rect localRect22, Bitmap blockbmp2,
+			int color, int i) {
+		this.localRect1 = localRect12;
+		this.localRect2 = localRect22;
+		this.blockbmp = blockbmp2;
+		paint = new Paint();
+		paint.setColor(color);
+		blockColor = color;
+		this.state = i;
+	}
 	public Rect getRect(){
 		return localRect1;
 	}
@@ -93,6 +104,12 @@ public class Block extends ShapeDrawable {
 	 * */
 	public int getColor() {
 		return paint.getColor();
+	}
+	public int getBlockState() {
+		return state;
+	}
+	public void changeBlockState(){
+		this.state = 1;
 	}
 
 	/***
