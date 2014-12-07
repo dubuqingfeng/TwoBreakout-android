@@ -19,10 +19,6 @@ public class Block extends ShapeDrawable {
 	private Paint paint;
 	private int blockColor;
 	private Bitmap bitmap;
-	float left;
-	float top;
-	float right;
-	float bottom;
 	private Rect localRect1;
 	private Rect localRect2;
 	private int state = 1;
@@ -54,10 +50,6 @@ public class Block extends ShapeDrawable {
 		super(new RectShape());
 		//this.setBounds(rect);
 		this.bitmap = bitmap;
-		this.left = left;
-		this.top = top;
-		this.right = bitmap.getWidth();
-		this.bottom = bitmap.getHeight();
 		paint = new Paint();
 		paint.setColor(color);
 		blockColor = color;

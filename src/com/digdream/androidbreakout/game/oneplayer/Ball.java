@@ -83,12 +83,12 @@ public class Ball extends ShapeDrawable {
 
 		// this.matrix = new Matrix();
 		// this.matrix.postScale(0.7F, 0.7F);
-
-		// this.ballbmp = Bitmap.createBitmap(readBitmap(context, "r" + 0), 0,
-		// 0, 28, 28,
-		// this.matrix, true);
-
-		this.getPaint().setColor(Color.CYAN);
+		Random random = new Random();
+		int r = random.nextInt(256);
+		int g = random.nextInt(256);
+		int b = random.nextInt(256);
+		this.getPaint().setColor(Color.rgb(r, g, b));
+		//this.getPaint().setColor(Color.CYAN);
 		soundOn = sound;
 
 		if (soundOn) {
@@ -98,7 +98,7 @@ public class Ball extends ShapeDrawable {
 			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
 		}
 		this.itembmp[1] = readBitmap(context, "item1");
-		
+		//读取球速
 		preferences = new UserPreferences();
 		preferences.init(context);
 	}
@@ -250,7 +250,13 @@ public class Ball extends ShapeDrawable {
 				&& ballRect.top <= mPaddle.bottom + (radius * 2)) {
 			paddleCollision = true;
 			// this is a collision change color
-			this.getPaint().setColor(Color.BLACK);
+			//randColor();
+			Random random = new Random();
+			int r = random.nextInt(256);
+			int g = random.nextInt(256);
+			int b = random.nextInt(256);
+			this.getPaint().setColor(Color.rgb(r, g, b));
+			//this.getPaint().setColor(Color.BLACK);
 			if (soundOn && velocityY > 0) {
 				soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
 			}
@@ -346,13 +352,30 @@ public class Ball extends ShapeDrawable {
 				}
 				Log.d(TAG, "blockCollision");
 				// 这里可以添加改变颜色
-				this.getPaint().setColor(Color.BLUE);
+				Random random = new Random();
+				int r = random.nextInt(256);
+				int g = random.nextInt(256);
+				int b = random.nextInt(256);
+				this.getPaint().setColor(Color.rgb(r, g, b));
+				//randColor();
+				//this.getPaint().setColor(Color.BLUE);
 				
 				return points += getPoints(color);
 			}
 			
 		}
 		return points;
+	}
+	/**
+	 * 随机产生球的颜色
+	 */
+
+	private void randColor() {
+		Random random = new Random();
+		int r = random.nextInt(256);
+		int g = random.nextInt(256);
+		int b = random.nextInt(256);
+		this.getPaint().setColor(Color.rgb(r, g, b));
 	}
 
 	private static int rand(int paramInt) {

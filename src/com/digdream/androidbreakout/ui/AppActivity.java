@@ -102,8 +102,16 @@ public class AppActivity extends BaseActivity {
 				mPrepareBtn.setBackgroundResource(R.drawable.create_account_button);
 				mPrepareBtn.setClickable(false);
 				mGameData.mIsLocalPrepared = true;
-				if (mGameData.mMode == 1)
-					startGame();
+				if (mGameData.mMode == 1){
+					// 单人开始游戏
+					newGame = 1;
+					Intent intent = new Intent(AppActivity.this,com.digdream.androidbreakout.ui.LevelChooseActivity.class);
+					intent.putExtra("mode", mGameData.mMode);
+					intent.putExtra(NEW_GAME, newGame);
+					intent.putExtra(SOUND_ON_OFF, sound);
+					startActivity(intent);
+				}
+					//startGame();
 				else {
 					if (mGameData.mIsInviter) {
 						GameUserInfo localUser = mGameShare.getLocalUser();

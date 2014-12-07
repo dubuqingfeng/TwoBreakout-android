@@ -5,6 +5,7 @@ import com.digdream.androidbreakout.data.UserPreferences;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,10 @@ import android.widget.Toast;
  */
 public class StageActivity extends Activity {
 
+	private final String NEW_GAME = "NEW_GAME";
+	private static final String SOUND_PREFS = "SOUND_PREFS";
+	private final String SOUND_ON_OFF = "SOUND_ON_OFF";
+	
 	private Button mStage1;
 	private Button mStage2;
 	private Button mStage3;
@@ -29,6 +34,7 @@ public class StageActivity extends Activity {
 	private UserPreferences preferences;
 	private View mBtnReturn;
 	public static int stage;
+	private boolean sound;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class StageActivity extends Activity {
 		}
 		setContentView(R.layout.activity_stage);
 		buttonsetOnclick();
+		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
+		sound = soundSettings.getBoolean("soundOn", true);
 	}
 	public void buttonsetOnclick(){
 		//×¢²á¼àÌýÆ÷
@@ -68,6 +76,7 @@ public class StageActivity extends Activity {
 	public void toNextActivity(){
 		Intent intent = new Intent();
 		intent.putExtra("stage", stage);
+		intent.putExtra(SOUND_ON_OFF, sound);
 		intent.setClass(getApplicationContext(), com.digdream.androidbreakout.ui.SwitchActivity.class);
 		startActivity(intent);
 		com.digdream.androidbreakout.ui.StageActivity.this.finish();

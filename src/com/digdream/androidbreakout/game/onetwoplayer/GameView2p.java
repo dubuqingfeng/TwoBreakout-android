@@ -9,31 +9,22 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
-import org.json.JSONException;
-
 import com.digdream.androidbreakout.R;
-import com.digdream.androidbreakout.game.twoplayer.Ball;
-import com.digdream.androidbreakout.game.twoplayer.Block;
-import com.digdream.androidbreakout.game.twoplayer.Paddle;
-import com.digdream.androidbreakout.game.twoplayer.TopPaddle;
-import com.digdream.androidbreakout.module.GameMessages;
-import com.digdream.androidbreakout.module.GameMessages.AbstractGameMessage;
-import com.digdream.androidbreakout.module.GameMessages.GameBallDataMessage;
-import com.digdream.androidbreakout.module.GameMessages.GameDataMessage;
-import com.digdream.androidbreakout.module.GameMessages.GameLevelMessage;
-import com.lenovo.game.GameMessage;
-import com.lenovo.game.GameMessageListener;
-import com.lenovo.game.GameUserInfo;
+import com.digdream.androidbreakout.game.oneplayer.StageData;
+import com.digdream.androidbreakout.ui.StageActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -43,6 +34,7 @@ import android.view.SurfaceView;
  * 
  */
 public class GameView2p extends SurfaceView implements Runnable {
+	private int stage;
 	private static final String TAG = "2p的游戏界面GameView2p extends SurfaceView implements Runnable";
 	private boolean showGameOverBanner = false;
 	private int levelCompleted = 0;
@@ -58,6 +50,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 	private final int startTimer = 66;
 	private boolean touched = false;
 	private float eventX;
+	private float topeventX;
 	private SurfaceHolder holder;
 	private Thread gameThread = null;
 	private boolean running = false;
@@ -79,6 +72,10 @@ public class GameView2p extends SurfaceView implements Runnable {
 	private Bitmap bitmap;
 	private TopPaddle toppaddle;
 	// private Canvas canvas2p;
+	// 多点触控
+	private SparseArray<PointF> mActivePointers;
+	private StageData stagemap;
+	private Bitmap blockbmp;
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -92,18 +89,25 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 * */
 	public GameView2p(Context context, int launchNewGame, boolean sound) {
 		super(context);
+		stage = 1;
 		startNewGame = launchNewGame; // new game or continue
 		playerTurns = PLAYER_TURNS_NUM;
 		soundToggle = sound;
 		holder = getHolder();
 		ball = new Ball(this.getContext(), soundToggle);
-		//ball2 = new Ball2p(this.getContext(), soundToggle);
+		// ball2 = new Ball2p(this.getContext(), soundToggle);
 		paddle = new Paddle();
 		toppaddle = new TopPaddle();
 		blocksList = new ArrayList<Block>();
-		//设置背景
-		setBackgroundResource(R.drawable.chara1);
-		
+		// 设置背景
+		switch(stage){
+			case 1:setBackgroundResource(R.drawable.chara1);break;
+			case 2:setBackgroundResource(R.drawable.chara2);break;
+			case 3:setBackgroundResource(R.drawable.chara3);break;
+			case 4:setBackgroundResource(R.drawable.chara4);break;
+			case 5:setBackgroundResource(R.drawable.chara5);break;
+			case 6:setBackgroundResource(R.drawable.chara6);break;
+		}
 		scorePaint = new Paint();
 		scorePaint.setColor(Color.WHITE);
 		scorePaint.setTextSize(25);
@@ -117,6 +121,9 @@ public class GameView2p extends SurfaceView implements Runnable {
 		getReadyPaint.setTextAlign(Paint.Align.CENTER);
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
+		// 多点触控
+		mActivePointers = new SparseArray<PointF>();
+		this.blockbmp = readBitmap(context, "chara" + this.stage + "_block");
 	}
 
 	/**
@@ -162,10 +169,17 @@ public class GameView2p extends SurfaceView implements Runnable {
 				}
 
 				if (touched) {
-					if (mIsInviter) {
-						paddle.movePaddle((int) eventX);
-					} else {
-						toppaddle.movePaddle((int) eventX);
+					//
+					for (int size = mActivePointers.size(), i = 0; i < size; i++) {
+						PointF point = mActivePointers.valueAt(i);
+						if (point != null) {
+							if (point.y >= canvas.getHeight() / 2)
+								// 这里如果坐标大于屏幕一半移动下面挡板。
+								paddle.movePaddle((int) point.x);
+							else {
+								toppaddle.movePaddle((int) point.x);
+							}
+						}
 					}
 				}
 
@@ -195,16 +209,16 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void drawToCanvas(Canvas canvas) {
-		//canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
+		// canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
 		drawBlocks(canvas);
 		paddle.drawPaddle(canvas);
 		toppaddle.drawPaddle(canvas);
 		ball.drawBall(canvas);
-		//ball2.drawBall(canvas);
+		// ball2.drawBall(canvas);
 	}
 
 	/**
-	 *暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。 绘制文本来提醒用户，如果球重新启动或游戏就结束了。.
+	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。 绘制文本来提醒用户，如果球重新启动或游戏就结束了。.
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -224,7 +238,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 			// paddle collision
 			ball.checkPaddleCollision(paddle);
 			ball.checkTopPaddleCollision(toppaddle);
-			// block collision and points tally
 			points += ball.checkBlocksCollision(blocksList);
 		}
 
@@ -247,7 +260,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 *重置变量预示着新的游戏。删除剩余的砖块列表。当运行看到砖块列表是空的，它会启动新的游戏
+	 * 重置变量预示着新的游戏。删除剩余的砖块列表。当运行看到砖块列表是空的，它会启动新的游戏
 	 * 
 	 * @param canvas
 	 *            graphics canvas
@@ -320,44 +333,78 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 		startNewGame = 1; // only restore once
 	}
-
 	/**
 	 * 初始化块。canvas的宽度和高度尺寸和砖块的坐标。设置颜色取决于砖块的行。添加砖块到一个ArrayList。
 	 * 
+	 *
 	 * @param canvas
 	 *            graphics canvas
 	 * */
 	private void initBlocks(Canvas canvas) {
 		int blockHeight = canvas.getWidth() / 18;
 		int spacing = canvas.getWidth() / 144;
-		int topOffset = canvas.getHeight() / 5;
-		int blockWidth = (canvas.getWidth() / 10) - spacing;
+		int topOffset = canvas.getHeight() / 10;
+		int blockWidth = (canvas.getWidth() / 10);
 
+		// 获得图片
+		bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+				R.drawable.item1);
+		// 设置显示大小
+		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
+				canvas.getWidth() / 18);
+		bitmap = (bitmapDrawable).getBitmap();
+		/**
+		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
+		 * 读取关卡数据，值为2时需打两次。。。
+		 */
+		
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);
-
-				Rect r = new Rect();
-				r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
-						y_coordinate + blockHeight);
-
-				int color;
-
-				if (i < 2)
-					color = Color.RED;
-				else if (i < 4)
-					color = Color.YELLOW;
-				else if (i < 6)
-					color = Color.GREEN;
-				else if (i < 8)
-					color = Color.MAGENTA;
-				else
-					color = Color.LTGRAY;
-
-				Block block = new Block(r, color);
-
-				blocksList.add(block);
+				//if (StageData.GameDataArray[i][j] == 1) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmp,color);
+					blocksList.add(block);
+				/*}
+				if(StageData.GameDataArray[i][j] == 2) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
+							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmp,color,2);
+					blocksList.add(block);
+				}*/
+				
 			}
 		}
 	}
@@ -401,7 +448,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 *保存游戏数据，并且摧毁线程 Saves game data and destroys Thread.
+	 * 保存游戏数据，并且摧毁线程 Saves game data and destroys Thread.
 	 * */
 	public void pause() {
 		saveGameData();
@@ -429,79 +476,85 @@ public class GameView2p extends SurfaceView implements Runnable {
 	}
 
 	/**
-	 * 重写触摸事件监听器。通过触控移动挡板。
+	 * 重写触摸事件监听器。通过触控移动挡板。 多点触控。。。
 	 * 
 	 * @param event
 	 *            screen touch event
 	 * 
 	 * @return true
 	 * */
+	/*
+	 * @Override public boolean onTouchEvent(MotionEvent event) { if
+	 * (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() ==
+	 * MotionEvent.ACTION_MOVE) { eventX = event.getX(); touched = true; }
+	 * return touched; }
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN
-				|| event.getAction() == MotionEvent.ACTION_MOVE) {
-			eventX = event.getX();
-			touched = true;
+
+		// get pointer index from the event object
+		int pointerIndex = event.getActionIndex();
+
+		// get pointer ID
+		int pointerId = event.getPointerId(pointerIndex);
+
+		// get masked (not specific to a pointer) action
+		int maskedAction = event.getActionMasked();
+
+		switch (maskedAction) {
+
+		case MotionEvent.ACTION_DOWN:
+			Log.v(TAG,"action_down");
+			break;
+		case MotionEvent.ACTION_POINTER_DOWN: {
+			// We have a new pointer. Lets add it to the list of pointers
+			PointF f = new PointF();
+			f.x = event.getX(pointerIndex);
+			f.y = event.getY(pointerIndex);
+			mActivePointers.put(pointerId, f);
+			Log.v(TAG,"action_pointer_down");
+			break;
 		}
+		case MotionEvent.ACTION_MOVE: { // a pointer was moved
+			for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+				PointF point = mActivePointers.get(event.getPointerId(i));
+				if (point != null) {
+					point.x = event.getX(i);
+					// eventX = event.getX(i);
+					point.y = event.getY(i);
+					touched = true;
+				}
+
+			}
+			// eventX = event.getX();
+			Log.v(TAG,"action_move");
+			break;
+		}
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_POINTER_UP:
+		case MotionEvent.ACTION_CANCEL: {
+			mActivePointers.remove(pointerId);
+			break;
+		}
+		}
+		invalidate();
+
 		return touched;
 	}
+	/**
+	 * 读取位图
+	 * 
+	 * @param paramContext
+	 *            Android Context
+	 * @param paramString
+	 *            path
+	 * @return bitmap
+	 */
 
-	GameMessageListener mMessageListener = new GameMessageListener() {
-		private float gameData;
-		private int[] gameballData;
+	private static Bitmap readBitmap(Context paramContext, String paramString) {
+		int i = paramContext.getResources().getIdentifier(paramString,
+				"drawable", paramContext.getPackageName());
+		return BitmapFactory.decodeResource(paramContext.getResources(), i);
+	}
 
-		public void onMessage(GameMessage gameMessage) {
-			Log.v(TAG, "onMessage, message : " + gameMessage.toString());
-			AbstractGameMessage msg;
-			try {
-				msg = GameMessages.createGameMessage(gameMessage.getType(),
-						gameMessage.getMessage());
-				msg.setFrom(gameMessage.getFrom());
-				msg.setTo(gameMessage.getTo());
-			} catch (JSONException e) {
-				Log.d(TAG, "json error!");
-				return;
-			}
-			if (msg.getType().equalsIgnoreCase(GameMessages.MSG_TYPE_GAME_DATA)) {
-				GameDataMessage dataMsg = (GameDataMessage) msg;
-				gameData = dataMsg.getGameData();
-				if (!mIsInviter) {
-					// 这里不是邀请者
-					paddle.movePaddle((int) gameData);
-				} else {
-					// 这里是邀请者
-					toppaddle.movePaddle((int) gameData);
-				}
-				// mGameData.generateGameData(gameData);
-			} else if (msg.getType().equalsIgnoreCase(
-					GameMessages.MSG_TYPE_GAME_PREPARED)) {
-
-			} else if (msg.getType().equalsIgnoreCase(
-					GameMessages.MSG_TYPE_GAME_END)) {
-				gameOver(canvas);
-				getReadyPaint.setColor(Color.RED);
-				canvas.drawText("对方游戏结束!!!", canvas.getWidth() / 2,
-						(canvas.getHeight() / 2) - (ball.getBounds().height())
-								- 50, getReadyPaint);
-				//提示失败
-			} else if (msg.getType().equalsIgnoreCase(
-					GameMessages.MSG_TYPE_GAME_BEGIN)) {
-				if (!mIsInviter) {
-					// 这里不是邀请者
-				} else {
-					// 这里是邀请者
-
-				}
-			} else if (msg.getType().equalsIgnoreCase(
-					GameMessages.MSG_TYPE_GAME_BALL_DATA)) {
-				GameBallDataMessage dataMsg = (GameBallDataMessage) msg;
-				gameballData = dataMsg.getGameData();
-				if (!mIsInviter) {
-					// 这里不是邀请者
-				} else {
-					// 这里是邀请者
-				}
-			}
-		}
-	};
 }

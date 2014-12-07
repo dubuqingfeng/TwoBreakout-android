@@ -16,7 +16,7 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="com.lenovo.anyshare.action.START_GAME" />
 
@@ -38,6 +38,13 @@
        
         <activity
             android:name="com.digdream.androidbreakout.game.twoplayer.Breakout2p"
+            android:label="@string/title_activity_breakout"
+            android:theme="@style/withBackgroundTitleLevel1"  
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.digdream.androidbreakout.game.onetwoplayer.Breakout"
             android:label="@string/title_activity_breakout"
             android:theme="@style/withBackgroundTitleLevel1"  
             android:screenOrientation="portrait" >
@@ -71,6 +78,12 @@
             android:label="@string/title_activity_breakout"
             android:screenOrientation="portrait" >
         </activity>
+        <activity 
+            android:name="com.digdream.androidbreakout.ui.BaseActivity"
+            android:label="@string/title_activity_breakout"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light"
+           ></activity>
         <activity
             android:name="com.digdream.androidbreakout.ui.AboutActivity"
             android:label="@string/title_activity_breakout"

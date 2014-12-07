@@ -16,7 +16,7 @@ import android.view.WindowManager;
 public class Breakout extends Activity {
 
 	private boolean sound;
-	private GameView gameView;
+	private GameView2p gameView;
 
 	/**
 	 * activity 构造器。获得媒体的音量控制。隐藏标题栏并请求全屏窗口。通过intent传来的值/继续游戏。通过新游戏值到游戏中的线程发信号是否开始新游戏或继续与现有的游戏。
@@ -41,7 +41,7 @@ public class Breakout extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		// initialize graphics and game thread
-		gameView = new GameView(this, newGame, sound);
+		gameView = new GameView2p(this, newGame, sound);
 		gameView.setZOrderOnTop(true);
 		gameView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		setContentView(gameView);

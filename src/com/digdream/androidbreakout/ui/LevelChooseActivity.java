@@ -20,10 +20,16 @@ import android.widget.Button;
  */
 public class LevelChooseActivity extends BaseActivity {
 
+	private final String NEW_GAME = "NEW_GAME";
+	private static final String SOUND_PREFS = "SOUND_PREFS";
+	private final String SOUND_ON_OFF = "SOUND_ON_OFF";
 	
 	private Button btn_level1;
 	private Button btn_level2;
 	private Button btn_level3;
+	private boolean sound;
+	private int mode;
+	private int newGame;
 
 
 	@Override
@@ -31,6 +37,11 @@ public class LevelChooseActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_levelchoose);
 		init();
+		Intent intent = getIntent();
+		int newGame = intent.getIntExtra("NEW_GAME", 1);
+		sound = intent.getBooleanExtra("SOUND_ON_OFF", true);
+		mode = intent.getIntExtra("mode",1);
+
 	}
 
 	
@@ -47,6 +58,16 @@ public class LevelChooseActivity extends BaseActivity {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.level1:
+				if(mode == 1)
+				{
+					Intent intent = new Intent(LevelChooseActivity.this,
+							com.digdream.androidbreakout.game.onetwoplayer.Breakout.class);
+					intent.putExtra(NEW_GAME, newGame);
+					intent.putExtra(SOUND_ON_OFF, sound);
+					intent.putExtra("stage",1);
+					startActivity(intent);
+					LevelChooseActivity.this.finish();
+				}
 				//发送message
 				GameUserInfo localUser = mGameShare.getLocalUser();
 				GameUserInfo remoteUser = getRemoteUser();
@@ -59,10 +80,12 @@ public class LevelChooseActivity extends BaseActivity {
 					return;
 				mGameShare.sendMessage(msg);
 				//这里同时进入游戏
-				Intent intent = new Intent(LevelChooseActivity.this,
-						com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
-				startActivity(intent);
-				LevelChooseActivity.this.finish();
+				if(mode != 1){
+					Intent intent = new Intent(LevelChooseActivity.this,
+							com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
+					startActivity(intent);
+					LevelChooseActivity.this.finish();
+				}
 				break;
 
 			/*case R.id.level2:

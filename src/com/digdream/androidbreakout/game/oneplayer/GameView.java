@@ -170,8 +170,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-
-				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
 					//过关的处理方法。
@@ -183,11 +181,11 @@ public class GameView extends SurfaceView implements Runnable {
 					levelCompleted++;
 					successstate = true;
 					//跳转activity
-					Intent intent = new Intent(getContext(),com.digdream.androidbreakout.ui.ResultActivity.class);
-					intent.putExtra("stage", stage);
-					intent.putExtra("score", points);
-					intent.putExtra("state", successstate);
-					this.getContext().startActivity(intent);
+					//Intent intent = new Intent(getContext(),com.digdream.androidbreakout.ui.ResultActivity.class);
+					//intent.putExtra("stage", stage);
+					//intent.putExtra("score", points);
+					//intent.putExtra("state", successstate);
+					//this.getContext().startActivity(intent);
 				}
 
 				if (checkSize) {

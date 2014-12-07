@@ -110,8 +110,9 @@ public class BaseActivity extends Activity implements Bindlistener {
 	 * 展示退出的对话框，需修改样式。
 	 */
 	protected void showExitDialog() {
-		AlertDialog.Builder builder = new Builder(BaseActivity.this);
+		AlertDialog.Builder builder = new Builder(BaseActivity.this , R.style.dialog);
 		builder.setMessage(R.string.exit_text);
+		builder.setTitle("温馨提示");
 		builder.setPositiveButton(R.string.ok, new OnClickListener() {
 		
 			public void onClick(DialogInterface dialog, int which) {
