@@ -64,8 +64,11 @@ public class Ball extends ShapeDrawable {
 	private int blockSoundId;
 	private int bottomSoundId;
 	private final String TAG = "Ball";
-	private Bitmap[] itembmp = new Bitmap[4];
+	private Bitmap[] itembmp = new Bitmap[9];
 	private UserPreferences preferences;
+	boolean ItemExist;
+	private Item item;
+	private boolean newGame = false;
 
 	/**
 	 * 构造器。设置颜色及声音参数
@@ -97,7 +100,9 @@ public class Ball extends ShapeDrawable {
 			blockSoundId = soundPool.load(context, R.raw.block, 0);
 			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
 		}
-		this.itembmp[1] = readBitmap(context, "item1");
+		for(int i = 1; i < 7 ;i++){
+			this.itembmp[i] = readBitmap(context, "item"+i);
+		}
 		//读取球速
 		preferences = new UserPreferences();
 		preferences.init(context);
@@ -122,6 +127,8 @@ public class Ball extends ShapeDrawable {
 
 		paddleCollision = false;
 		blockCollision = false;
+		strongflag = false;
+		
 		SCREEN_WIDTH = width;
 		SCREEN_HEIGHT = height;
 
@@ -161,7 +168,7 @@ public class Ball extends ShapeDrawable {
 		this.draw(canvas);
 	}
 	
-	public void drawItem(Canvas canvas,Item item) {
+	public void drawItem(Canvas canvas) {
 		item.drawItem(canvas);
 	}
 
@@ -177,6 +184,13 @@ public class Ball extends ShapeDrawable {
 			// 如果有闪光球，不执行条件句
 			if (!strongflag) {
 				velocityY = -velocityY;
+			}
+			int a = (int)(Math.random() *100 +1);
+			if(a < 20){
+				//生成个掉落物体
+				int i = (int)(Math.random() *6 +1);
+				item = new Item(i,left,top,itembmp[i]);
+				ItemExist = true;
 			}
 			blockCollision = false; // reset
 		}
@@ -216,6 +230,7 @@ public class Ball extends ShapeDrawable {
 			try {
 				Thread.sleep(resetBallTimer);
 				initCoords(SCREEN_WIDTH, SCREEN_HEIGHT); // reset ball
+				newGame  = true;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -244,6 +259,10 @@ public class Ball extends ShapeDrawable {
 		mPaddle = paddle.getBounds();
 		ballRect = this.getBounds();
 
+		if(newGame){
+			paddle.setPaddleWidth();
+			newGame = false;
+		}
 		if (ballRect.left >= mPaddle.left - (radius * 2)
 				&& ballRect.right <= mPaddle.right + (radius * 2)
 				&& ballRect.bottom >= mPaddle.top - (radius * 2)
@@ -341,6 +360,7 @@ public class Ball extends ShapeDrawable {
 				blockCollision = true;
 				if(blocks.get(i).getBlockState() == 1)
 					blocks.remove(i);
+					
 				else if (blocks.get(i).getBlockState() == 2){
 					blocks.get(i).changeBlockState();
 				}
@@ -350,7 +370,6 @@ public class Ball extends ShapeDrawable {
 				if (soundOn) {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
-				Log.d(TAG, "blockCollision");
 				// 这里可以添加改变颜色
 				Random random = new Random();
 				int r = random.nextInt(256);
@@ -425,6 +444,9 @@ public class Ball extends ShapeDrawable {
 	public void addBallSize() {
 
 	}
+	public void setStrongBall(){
+		strongflag = true;
+	}
 
 	/**
 	 * 返回一个基于颜色的块的分数。
@@ -467,7 +489,7 @@ public class Ball extends ShapeDrawable {
 	public int getVelocityX() {
 		return velocityX;
 	}
-
+	
 	/**
 	 * Releases sound assets.
 	 * */
@@ -476,5 +498,45 @@ public class Ball extends ShapeDrawable {
 			soundPool.release();
 			soundPool = null;
 		}
+	}
+
+	public void drawItemSetVelocity() {
+		if(item.Y > SCREEN_HEIGHT){
+			ItemExist = false;
+		}
+		item.setVelocityY();
+	}
+
+	/*
+	 * 检查落物是否与挡板相撞
+	 */
+	public boolean checkItemPaddleCollision(Paddle paddle) {
+		//if(item.X)
+		//ballRect = this.getBounds();
+		if(item.X >= mPaddle.left && item.X >= mPaddle.right){
+			item.paddleCollision = false;
+		}else if(item.X <= mPaddle.left && item.getBounds().right <= mPaddle.left){
+			item.paddleCollision = false;
+		}else if(item.Y >= mPaddle.top && item.Y >= mPaddle.bottom){
+			item.paddleCollision = false;
+		}else if(item.Y <= mPaddle.top && item.getBounds().bottom <= mPaddle.top){
+			item.paddleCollision = false;
+		}else {
+			item.paddleCollision = true;
+			switch(item.Itemflg){
+			case 1:
+				
+				break;
+			case 2:setStrongBall();
+				break;
+			case 3:
+				paddle.addPaddleWidth();
+				break;
+			case 4:paddle.subPaddleWidth();break;
+			case 5:break;
+			case 6:break;
+			}
+		}
+		return item.paddleCollision;
 	}
 }

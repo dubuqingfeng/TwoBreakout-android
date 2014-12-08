@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.util.Log;
 
 /**
  * 这是一个玩家的砖块类
@@ -87,8 +88,8 @@ public class Block extends ShapeDrawable {
 	 *            graphic canvas
 	 * */
 	public void drawBlock(Canvas canvas) {
-		canvas.drawBitmap(Block.blockbmp, localRect1, localRect2,
-				null);
+		Log.e("tet",Block.blockbmp.toString());
+		canvas.drawBitmap(Block.blockbmp, localRect1, localRect2,null);
 		//canvas.drawBitmap(bitmap,left,top,paint);
 		//canvas.drawRect(this.getBounds(), paint);
 	}

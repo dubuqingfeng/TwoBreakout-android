@@ -86,6 +86,16 @@ public class Paddle extends ShapeDrawable {
 		this.draw(canvas);
 	}
 
+	public void addPaddleWidth(){
+		if(paddle_width <= SCREEN_WIDTH / 2){
+			paddle_width += SCREEN_WIDTH / 30;
+		}
+	}
+	public void subPaddleWidth(){
+		if(paddle_width >= SCREEN_WIDTH /100){
+			paddle_width -= SCREEN_WIDTH / 30;
+		}
+	}
 	/**
 	 * 设置挡板的坐标。该挡板可以在屏幕上移动仅沿x轴。
 	 * 
@@ -114,5 +124,11 @@ public class Paddle extends ShapeDrawable {
 			right = SCREEN_WIDTH;
 			left = SCREEN_WIDTH - (paddle_width * 2);
 		}
+	}
+	/**
+	 * 初始化
+	 */
+	public void setPaddleWidth() {
+		paddle_width = SCREEN_WIDTH / 10;
 	}
 }

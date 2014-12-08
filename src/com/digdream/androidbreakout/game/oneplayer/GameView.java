@@ -227,12 +227,18 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void drawToCanvas(Canvas canvas) {
-		
 		drawBlocks(canvas);
 		paddle.drawPaddle(canvas);
 		ball.drawBall(canvas);
+		//如果存在掉落物体
+		if(ball.ItemExist){
+			if(!ball.checkItemPaddleCollision(paddle))
+					ball.drawItem(canvas);
+			else{
+				ball.ItemExist = false;
+			}
+		}
 	}
-	
 
 	/**
 	 * 暂停动画，直到等待计数器被满足。设置速度和球坐标。检查碰撞。如果检查游戏就结束了。 绘制文本来提醒用户，如果球重新启动或游戏就结束了。...
@@ -246,6 +252,9 @@ public class GameView extends SurfaceView implements Runnable {
 		if (waitCount > startTimer) {
 			showGameOverBanner = false;
 			playerTurns -= ball.setVelocity();
+			if(ball.ItemExist){
+				ball.drawItemSetVelocity();
+			}
 			if (playerTurns < 0) {
 				showGameOverBanner = true;
 				gameOver(canvas);

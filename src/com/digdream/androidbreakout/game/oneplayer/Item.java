@@ -21,6 +21,10 @@ public class Item extends ShapeDrawable{
 	private int velocityY;
 	
 	private Bitmap[] itembmp = new Bitmap[4];
+
+	public boolean paddleCollision;
+
+	private int randomnumber;
 	Item(){
 		
 	}
@@ -34,21 +38,27 @@ public class Item extends ShapeDrawable{
 		this.X = left;
 		this.Y = top;
 		velocityY = Y;
+		randomnumber = (int)(Math.random() *10 +4);
 	}
 	public void drawItem(Canvas canvas) {
 		canvas.drawBitmap(bitmap, X, Y,
 				null);
 	}
 	void setVelocityY(){
-		this.Y += velocityY /2; 
+		//随机速度,原来是8
+
+		this.Y += velocityY / randomnumber; 
+	}
+	public void checkPaddleCollision(){
 	}
 	/**
 	 * itemflg  
-	 * 1 	增大挡板
-	 * 2	减小挡板
+	 * 3	增大挡板
+	 * 4	减小挡板
+	 * 
 	 * 3	增加速度
 	 * 4 	减小速度
-	 * 5 	strong球
+	 * 2 	strong球
 	 * 6 	
 	 */
 }

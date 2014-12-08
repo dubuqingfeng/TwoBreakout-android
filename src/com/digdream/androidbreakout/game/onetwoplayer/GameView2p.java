@@ -69,7 +69,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 	public static boolean mIsInviter = true;
 	private BitmapDrawable bitmapDrawable;
-	private Bitmap bitmap;
 	private TopPaddle toppaddle;
 	// private Canvas canvas2p;
 	// 多点触控
@@ -142,16 +141,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-				// canvas.drawColor(Color.BLACK);
-				// 获得图片
-				bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
-						R.drawable.chara1);
-				// 设置显示大小
-				bitmapDrawable.setBounds(0, 0, 80, 80);
-				bitmap = (bitmapDrawable).getBitmap();
-				// 画出图片
-				canvas.drawBitmap(bitmap, 50, 50, null);
-				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
 					checkSize = true;
@@ -286,6 +275,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 		if (startNewGame == 0) {
 			restoreGameData();
 		} else {
+			Log.d("tttttt","77777777777777");
 			initBlocks(canvas);
 		}
 	}
@@ -347,12 +337,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 		int blockWidth = (canvas.getWidth() / 10);
 
 		// 获得图片
-		bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
-				R.drawable.item1);
 		// 设置显示大小
-		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
-				canvas.getWidth() / 18);
-		bitmap = (bitmapDrawable).getBitmap();
 		/**
 		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
 		 * 读取关卡数据，值为2时需打两次。。。
