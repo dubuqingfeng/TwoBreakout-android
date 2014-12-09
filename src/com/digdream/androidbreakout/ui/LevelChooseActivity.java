@@ -38,7 +38,7 @@ public class LevelChooseActivity extends BaseActivity {
 		setContentView(R.layout.activity_levelchoose);
 		init();
 		Intent intent = getIntent();
-		int newGame = intent.getIntExtra("NEW_GAME", 1);
+		newGame = intent.getIntExtra("NEW_GAME", 1);
 		sound = intent.getBooleanExtra("SOUND_ON_OFF", true);
 		mode = intent.getIntExtra("mode",1);
 
@@ -67,24 +67,25 @@ public class LevelChooseActivity extends BaseActivity {
 					intent.putExtra("stage",1);
 					startActivity(intent);
 					LevelChooseActivity.this.finish();
-				}
-				//发送message
-				GameUserInfo localUser = mGameShare.getLocalUser();
-				GameUserInfo remoteUser = getRemoteUser();
-				if (localUser == null || remoteUser == null)
-					return;
-				GameLevelMessage dataMsg = new GameLevelMessage(
-						localUser.id, remoteUser.id, 1);
-				GameMessage msg = dataMsg.toGameMessage();
-				if (msg == null)
-					return;
-				mGameShare.sendMessage(msg);
-				//这里同时进入游戏
-				if(mode != 1){
-					Intent intent = new Intent(LevelChooseActivity.this,
-							com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
-					startActivity(intent);
-					LevelChooseActivity.this.finish();
+				}else{
+					//发送message
+					GameUserInfo localUser = mGameShare.getLocalUser();
+					GameUserInfo remoteUser = getRemoteUser();
+					if (localUser == null || remoteUser == null)
+						return;
+					GameLevelMessage dataMsg = new GameLevelMessage(
+							localUser.id, remoteUser.id, 1);
+					GameMessage msg = dataMsg.toGameMessage();
+					if (msg == null)
+						return;
+					mGameShare.sendMessage(msg);
+					//这里同时进入游戏
+					if(mode != 1){
+						Intent intent = new Intent(LevelChooseActivity.this,
+								com.digdream.androidbreakout.game.twoplayer.Breakout2p.class);
+						startActivity(intent);
+						LevelChooseActivity.this.finish();
+					}
 				}
 				break;
 

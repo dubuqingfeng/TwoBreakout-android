@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 /**
  * 程序主界面
@@ -37,11 +38,11 @@ public class AppActivity extends BaseActivity {
 	private final String NEW_GAME = "NEW_GAME";
 	private static final String SOUND_PREFS = "SOUND_PREFS";
 	private final String SOUND_ON_OFF = "SOUND_ON_OFF";
-	private Button mPrepareBtn;
-	private Button mAbout;
-	private Button mBtn1pStart;
+	private ImageButton mPrepareBtn;
+	private ImageButton mAbout;
+	private ImageButton mBtn1pStart;
 	private Button mAudioBtn;
-	private Button mOptionBtn;
+	private ImageButton mOptionBtn;
 	private GameData mGameData = null;
 	private int newGame;
 	private boolean sound;
@@ -56,15 +57,15 @@ public class AppActivity extends BaseActivity {
 
 	private void init() {
 
-		mPrepareBtn = (Button) findViewById(R.id.btn_prepare);
+		mPrepareBtn = (ImageButton) findViewById(R.id.btn_prepare);
 		mPrepareBtn.setOnClickListener(mOnClickListener);
-		mAbout = (Button) findViewById(R.id.btn_about);
+		mAbout = (ImageButton) findViewById(R.id.btn_about);
 		mAbout.setOnClickListener(mOnClickListener);
-		mBtn1pStart = (Button) findViewById(R.id.btn_1pstart);
+		mBtn1pStart = (ImageButton) findViewById(R.id.btn_1pstart);
 		mBtn1pStart.setOnClickListener(mOnClickListener);
 		mAudioBtn = (Button) findViewById(R.id.btn_audio);
 		mAudioBtn.setOnClickListener(mOnClickListener);
-		mOptionBtn = (Button) findViewById(R.id.btn_option);
+		mOptionBtn = (ImageButton) findViewById(R.id.btn_option);
 		mOptionBtn.setOnClickListener(mOnClickListener);
 		
 		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
@@ -98,8 +99,9 @@ public class AppActivity extends BaseActivity {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.btn_prepare:
-				mPrepareBtn.setText(R.string.prepared);
-				mPrepareBtn.setBackgroundResource(R.drawable.create_account_button);
+				//mPrepareBtn.setText(R.string.prepared);
+				mPrepareBtn.setImageDrawable(getResources().getDrawable(R.drawable.btn_prepare));
+				//mPrepareBtn.setBackgroundResource(R.drawable.create_account_button);
 				mPrepareBtn.setClickable(false);
 				mGameData.mIsLocalPrepared = true;
 				if (mGameData.mMode == 1){
@@ -206,6 +208,15 @@ public class AppActivity extends BaseActivity {
 		super.onDestroy();
 		if (mGameShare != null)
 			mGameShare.removeMessageListener(mMessageListener);
+	}
+	
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		mPrepareBtn.setClickable(true);
+		//mPrepareBtn.setText(R.string.prepare);
+		mPrepareBtn.setImageDrawable(getResources().getDrawable(R.drawable.btn_two));
 	}
 
 	private GameMessageListener mMessageListener = new GameMessageListener() {

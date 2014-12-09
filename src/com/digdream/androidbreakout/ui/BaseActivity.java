@@ -117,7 +117,7 @@ public class BaseActivity extends Activity implements Bindlistener {
 		
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				mGameShare.quitGame();
+				//mGameShare.quitGame();
 				BaseActivity.this.finish();
 				System.exit(0);
 			}

@@ -88,7 +88,6 @@ public class Block extends ShapeDrawable {
 	 *            graphic canvas
 	 * */
 	public void drawBlock(Canvas canvas) {
-		Log.e("tet",Block.blockbmp.toString());
 		canvas.drawBitmap(Block.blockbmp, localRect1, localRect2,null);
 		//canvas.drawBitmap(bitmap,left,top,paint);
 		//canvas.drawRect(this.getBounds(), paint);

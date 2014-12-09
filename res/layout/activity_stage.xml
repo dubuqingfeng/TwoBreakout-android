@@ -2,49 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/levelchoose">
-   <Button
-        android:id="@+id/btn_return"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_return" />
+    android:background="@drawable/levelbackground"
+    android:orientation="vertical" >
     <Button
+        android:layout_marginTop="110dp"
         android:id="@+id/btn_stage_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_1" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_1"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_stage_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_2" />
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_2"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_stage_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_3" />
-
- 
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_3"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_stage_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_4" />
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_4"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_stage_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_5" />
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_5"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_stage_6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_stage_6" />
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/btn_stage_6"
+        android:textSize="30sp" />
 
 </LinearLayout>

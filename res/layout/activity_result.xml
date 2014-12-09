@@ -3,7 +3,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/levelchoose" >
+    android:background="@drawable/levelbackground" >
+    <TextView
+        android:id="@+id/result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/result_title"
+        android:layout_marginTop="110dp"
+        android:layout_gravity="center"
+        android:textSize="50sp"
+        android:textColor="@color/greenDark"
+        />
     
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_stage" 
+        android:text="@string/result_stage"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+         android:textColor="@color/breakoutBlue"
+        android:textSize="30sp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_points"
+        android:text="12222"
+         android:textColor="@color/breakoutRed"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:textSize="30sp" 
+        />
+   	<Button
+        android:id="@+id/result_btn_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/result_btn_next"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/result_btn_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/result_btn_reload"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/result_btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg211"
+        android:text="@string/result_btn_return"
+        android:textSize="30sp" />
+        
 
 </LinearLayout>

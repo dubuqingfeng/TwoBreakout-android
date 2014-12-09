@@ -32,13 +32,13 @@ public class SwitchActivity extends Activity{
         Intent intent = getIntent();
         int stage = intent.getIntExtra("stage", 1);
         switch(stage){
-        case 1:setContentView(R.layout.mainswitch);break;
-        case 2:setContentView(R.layout.stage_switch2);break;
-        case 3:setContentView(R.layout.stage_switch3);break;
-        case 4:setContentView(R.layout.stage_switch4);break;
-        case 5:setContentView(R.layout.stage_switch5);break;
-        case 6:setContentView(R.layout.stage_switch6);break;
-        default:
+	        case 1:setContentView(R.layout.mainswitch);break;
+	        case 2:setContentView(R.layout.stage_switch2);break;
+	        case 3:setContentView(R.layout.stage_switch3);break;
+	        case 4:setContentView(R.layout.stage_switch4);break;
+	        case 5:setContentView(R.layout.stage_switch5);break;
+	        case 6:setContentView(R.layout.stage_switch6);break;
+	        default:
         }
         init();
     }

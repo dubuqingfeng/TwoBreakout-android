@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
@@ -75,6 +76,8 @@ public class GameView2p extends SurfaceView implements Runnable {
 	private SparseArray<PointF> mActivePointers;
 	private StageData stagemap;
 	private Bitmap blockbmp;
+	private Matrix matrix;
+	private Bitmap blockbmpfixed;
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -99,13 +102,25 @@ public class GameView2p extends SurfaceView implements Runnable {
 		toppaddle = new TopPaddle();
 		blocksList = new ArrayList<Block>();
 		// 设置背景
-		switch(stage){
-			case 1:setBackgroundResource(R.drawable.chara1);break;
-			case 2:setBackgroundResource(R.drawable.chara2);break;
-			case 3:setBackgroundResource(R.drawable.chara3);break;
-			case 4:setBackgroundResource(R.drawable.chara4);break;
-			case 5:setBackgroundResource(R.drawable.chara5);break;
-			case 6:setBackgroundResource(R.drawable.chara6);break;
+		switch (stage) {
+		case 1:
+			setBackgroundResource(R.drawable.chara1);
+			break;
+		case 2:
+			setBackgroundResource(R.drawable.chara2);
+			break;
+		case 3:
+			setBackgroundResource(R.drawable.chara3);
+			break;
+		case 4:
+			setBackgroundResource(R.drawable.chara4);
+			break;
+		case 5:
+			setBackgroundResource(R.drawable.chara5);
+			break;
+		case 6:
+			setBackgroundResource(R.drawable.chara6);
+			break;
 		}
 		scorePaint = new Paint();
 		scorePaint.setColor(Color.WHITE);
@@ -123,6 +138,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 		// 多点触控
 		mActivePointers = new SparseArray<PointF>();
 		this.blockbmp = readBitmap(context, "chara" + this.stage + "_block");
+		this.matrix = new Matrix();
 	}
 
 	/**
@@ -227,7 +243,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 			// paddle collision
 			ball.checkPaddleCollision(paddle);
 			ball.checkTopPaddleCollision(toppaddle);
-			points += ball.checkBlocksCollision(blocksList);
+			points += ball.checkBlocksCollision(blocksList, canvas);
 		}
 
 		else {
@@ -268,6 +284,13 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 *            graphical canvas
 	 * */
 	private void initObjects(Canvas canvas) {
+		float w = canvas.getWidth();
+		
+		int width = this.blockbmp.getWidth();
+		int height = this.blockbmp.getHeight();
+		float h = width * height / w;
+		this.matrix.postScale(w / width, h / height);
+		blockbmpfixed = Bitmap.createBitmap(blockbmp, 0, 0, width, height,matrix,true);
 		touched = false; // reset paddle location
 		ball.initCoords(canvas.getWidth(), canvas.getHeight());
 		paddle.initCoords(canvas.getWidth(), canvas.getHeight());
@@ -275,7 +298,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 		if (startNewGame == 0) {
 			restoreGameData();
 		} else {
-			Log.d("tttttt","77777777777777");
 			initBlocks(canvas);
 		}
 	}
@@ -323,21 +345,26 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 		startNewGame = 1; // only restore once
 	}
+
 	/**
 	 * 初始化块。canvas的宽度和高度尺寸和砖块的坐标。设置颜色取决于砖块的行。添加砖块到一个ArrayList。
 	 * 
-	 *
+	 * 
 	 * @param canvas
 	 *            graphics canvas
 	 * */
 	private void initBlocks(Canvas canvas) {
-		int blockHeight = canvas.getWidth() / 18;
+		int blockHeight = (((480 * 720 ) / canvas.getWidth() ) *16)/360;
 		int spacing = canvas.getWidth() / 144;
 		int topOffset = canvas.getHeight() / 10;
 		int blockWidth = (canvas.getWidth() / 10);
-
 		// 获得图片
+		//bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+			//	R.drawable.item1);
 		// 设置显示大小
+		//bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
+				//canvas.getWidth() / 18);
+		//bitmap = (bitmapDrawable).getBitmap();
 		/**
 		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
 		 * 读取关卡数据，值为2时需打两次。。。
@@ -359,13 +386,14 @@ public class GameView2p extends SurfaceView implements Runnable {
 						color = Color.MAGENTA;
 					else
 						color = Color.LTGRAY;
-					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
-					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
 					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
 						//	null);
-					Block block = new Block(localRect1, localRect2, blockbmp,color);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color);
 					blocksList.add(block);
 				/*}
 				if(StageData.GameDataArray[i][j] == 2) {
@@ -380,20 +408,25 @@ public class GameView2p extends SurfaceView implements Runnable {
 						color = Color.MAGENTA;
 					else
 						color = Color.LTGRAY;
-					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
-					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
 					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
 						//	null);
-					Block block = new Block(localRect1, localRect2, blockbmp,color,2);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color,2);
 					blocksList.add(block);
 				}*/
+				// Rect r = new Rect();
+				// r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
+				// y_coordinate + blockHeight);
 				
+			//	Block block = new Block(color, bitmap, x_coordinate,
+		//				y_coordinate);
+			//	blocksList.add(block);
 			}
 		}
 	}
-
 	/**
 	 * 画砖块
 	 * 
@@ -474,7 +507,67 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 * MotionEvent.ACTION_MOVE) { eventX = event.getX(); touched = true; }
 	 * return touched; }
 	 */
-	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		int action = event.getAction() & MotionEvent.ACTION_MASK;
+		int pointerIndex = event.getActionIndex();
+		int pointerId = event.getPointerId(pointerIndex);
+		switch (action) {
+		case MotionEvent.ACTION_DOWN: {
+			
+			Log.w("CV", "Pointer Down ");
+			break;
+		}
+		case MotionEvent.ACTION_MOVE: {
+			PointF first = new PointF();
+			first.x = event.getX(pointerIndex);
+			first.y = event.getY(pointerIndex);
+			mActivePointers.put(pointerId, first);
+			touched = true;
+			/*for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+				PointF point = mActivePointers.get(event.getPointerId(i));
+				if (point != null) {
+					point.x = event.getX(i);
+					// eventX = event.getX(i);
+					point.y = event.getY(i);
+					touched = true;
+				}
+				//mActivePointers.put(pointerId, point);
+			}*/
+			// eventX = event.getX();
+			 Log.d("CV","Pointer Move ");
+			break;
+		}
+		case MotionEvent.ACTION_POINTER_DOWN: {
+			// We have a new pointer. Lets add it to the list of pointers
+			// get pointer index from the event object
+			
+			// get pointer ID
+
+			PointF f = new PointF();
+			f.x = event.getX(pointerIndex);
+			f.y = event.getY(pointerIndex);
+			mActivePointers.put(pointerId, f);
+			touched = true;
+			Log.w("CV", "Other point down");
+			break;
+		}
+		case MotionEvent.ACTION_POINTER_UP: {
+			Log.w("CV", "Other point up");
+			break;
+		}
+		case MotionEvent.ACTION_UP: {
+			Log.w("CV", "Pointer up");
+			break;
+		}
+		case MotionEvent.ACTION_CANCEL: {
+			mActivePointers.remove(pointerId);
+			break;
+		}
+		}
+		return true;
+	}
+
+	/*@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
 		// get pointer index from the event object
@@ -489,7 +582,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 		switch (maskedAction) {
 
 		case MotionEvent.ACTION_DOWN:
-			Log.v(TAG,"action_down");
+			Log.v(TAG, "action_down");
 			break;
 		case MotionEvent.ACTION_POINTER_DOWN: {
 			// We have a new pointer. Lets add it to the list of pointers
@@ -497,7 +590,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 			f.x = event.getX(pointerIndex);
 			f.y = event.getY(pointerIndex);
 			mActivePointers.put(pointerId, f);
-			Log.v(TAG,"action_pointer_down");
+			Log.v(TAG, "action_pointer_down");
 			break;
 		}
 		case MotionEvent.ACTION_MOVE: { // a pointer was moved
@@ -512,7 +605,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 			}
 			// eventX = event.getX();
-			Log.v(TAG,"action_move");
+			Log.v(TAG, "action_move");
 			break;
 		}
 		case MotionEvent.ACTION_UP:
@@ -526,6 +619,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 		return touched;
 	}
+*/
 	/**
 	 * 读取位图
 	 * 

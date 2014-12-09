@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">双人萌少女打砖块</string>
+    <string name="app_name">萌少女打砖块</string>
     <string name="title_activity_breakout">Breakout</string>
     <string name="launch">New Game</string>
     <string name="cont">Continue Game</string>
@@ -21,12 +21,18 @@
     <string name="exit_text">确定要退出吗？</string>
     <string name="cancel">取消</string>
     
-    <string name="btn_stage_1">相识</string>
-    <string name="btn_stage_2">相遇</string>
-    <string name="btn_stage_3">相知</string>
-    <string name="btn_stage_4">相恋</string>
-    <string name="btn_stage_5">相依</string>
-    <string name="btn_stage_6">相离</string>
+    <string name="btn_stage_1">相        识</string>
+    <string name="btn_stage_2">相        遇</string>
+    <string name="btn_stage_3">相        知</string>
+    <string name="btn_stage_4">相        恋</string>
+    <string name="btn_stage_5">相        依</string>
+    <string name="btn_stage_6">相        离</string>
     
     <string name="btn_return">返回</string>
+    
+    <string name="result_title">结       果</string>
+    <string name="result_stage">第 1  关</string>
+    <string name="result_btn_reload">重来</string>
+    <string name="result_btn_return">返回</string>
+    <string name="result_btn_next">下一关</string>
 </resources>

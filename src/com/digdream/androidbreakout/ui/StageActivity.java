@@ -32,7 +32,7 @@ public class StageActivity extends Activity {
 	private Button mStage5;
 	private Button mStage6;
 	private UserPreferences preferences;
-	private View mBtnReturn;
+
 	public static int stage;
 	private boolean sound;
 
@@ -69,8 +69,6 @@ public class StageActivity extends Activity {
 		mStage5.setOnClickListener(mOnClickListener);
 		mStage6 = (Button)findViewById(R.id.btn_stage_6);
 		mStage6.setOnClickListener(mOnClickListener);
-		mBtnReturn = (Button)findViewById(R.id.btn_return);
-		mBtnReturn.setOnClickListener(mOnClickListener);
 	}
 	
 	public void toNextActivity(){
@@ -146,8 +144,6 @@ public class StageActivity extends Activity {
 					}else{
 						Toast.makeText(getApplicationContext(), "µÈ¼¶²»¹»", Toast.LENGTH_SHORT).show();
 					}
-					break;
-				case R.id.btn_return:
 					break;
 				default :
 			}

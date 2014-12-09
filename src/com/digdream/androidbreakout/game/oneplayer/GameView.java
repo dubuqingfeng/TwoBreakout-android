@@ -14,6 +14,7 @@ import com.digdream.androidbreakout.data.UserPreferences;
 import com.digdream.androidbreakout.ui.StageActivity;
 import com.lenovo.game.GameMessageListener;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -27,6 +28,7 @@ import android.graphics.Rect;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -78,6 +80,7 @@ public class GameView extends SurfaceView implements Runnable {
 	private Bitmap stageeye;
 	private StageData stagemap;
 	private Bitmap blockbmp;
+	private Bitmap blockbmpfixed;
 
 	// private Item[] item = new Item[5];
 	// Bitmap[] itembmp = new Bitmap[9];
@@ -134,7 +137,6 @@ public class GameView extends SurfaceView implements Runnable {
 		this.stagebmp = readBitmap(context, "chara" + this.stage);
 		this.stageeye = readBitmap(context, "chara" + this.stage + "_eye");
 		this.matrix = new Matrix();
-		this.matrix.postScale(0.7F, 0.7F);
 		// 画出图片
 		// canvas.drawBitmap(bitmap, 50, 50, null);
 
@@ -170,6 +172,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
+				//holder.setFixedSize(480, 800);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
 					//过关的处理方法。
@@ -181,11 +184,13 @@ public class GameView extends SurfaceView implements Runnable {
 					levelCompleted++;
 					successstate = true;
 					//跳转activity
-					//Intent intent = new Intent(getContext(),com.digdream.androidbreakout.ui.ResultActivity.class);
-					//intent.putExtra("stage", stage);
-					//intent.putExtra("score", points);
-					//intent.putExtra("state", successstate);
-					//this.getContext().startActivity(intent);
+					if(levelCompleted > 1){
+						Intent intent = new Intent(getContext(),com.digdream.androidbreakout.ui.ResultActivity.class);
+						intent.putExtra("stage", stage);
+						intent.putExtra("score", points);
+						intent.putExtra("state", successstate);
+						this.getContext().startActivity(intent);
+					}
 				}
 
 				if (checkSize) {
@@ -304,6 +309,14 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphical canvas
 	 * */
 	private void initObjects(Canvas canvas) {
+		float w = canvas.getWidth();
+		
+		
+		int width = this.blockbmp.getWidth();
+		int height = this.blockbmp.getHeight();
+		float h = width * height / w;
+		this.matrix.postScale(w / width, h / height);
+		blockbmpfixed = Bitmap.createBitmap(blockbmp, 0, 0, width, height,matrix,true);
 		touched = false; // reset paddle location
 		canvas.drawBitmap(this.stagebmp, 0.0F, 0.0F, null);
 		ball.initCoords(canvas.getWidth(), canvas.getHeight());
@@ -368,18 +381,17 @@ public class GameView extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void initBlocks(Canvas canvas) {
-		int blockHeight = canvas.getWidth() / 18;
+		int blockHeight = (((480 * 720 ) / canvas.getWidth() ) *16)/360;
 		int spacing = canvas.getWidth() / 144;
 		int topOffset = canvas.getHeight() / 10;
 		int blockWidth = (canvas.getWidth() / 10);
-
 		// 获得图片
-		bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
-				R.drawable.item1);
+		//bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+			//	R.drawable.item1);
 		// 设置显示大小
-		bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
-				canvas.getWidth() / 18);
-		bitmap = (bitmapDrawable).getBitmap();
+		//bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
+				//canvas.getWidth() / 18);
+		//bitmap = (bitmapDrawable).getBitmap();
 		/**
 		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
 		 * 读取关卡数据，值为2时需打两次。。。
@@ -401,13 +413,14 @@ public class GameView extends SurfaceView implements Runnable {
 						color = Color.MAGENTA;
 					else
 						color = Color.LTGRAY;
-					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
-					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
 					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
 						//	null);
-					Block block = new Block(localRect1, localRect2, blockbmp,color);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color);
 					blocksList.add(block);
 				}
 				if(StageData.GameDataArray[i][j] == 2) {
@@ -422,13 +435,13 @@ public class GameView extends SurfaceView implements Runnable {
 						color = Color.MAGENTA;
 					else
 						color = Color.LTGRAY;
-					Rect localRect1 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
-					Rect localRect2 = new Rect(48 * (j % 10), 16 * (i % 10),
-							48 + 48 * (j % 10), 16 + 16 * (i % 10));
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
 					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
 						//	null);
-					Block block = new Block(localRect1, localRect2, blockbmp,color,2);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color,2);
 					blocksList.add(block);
 				}
 				// Rect r = new Rect();

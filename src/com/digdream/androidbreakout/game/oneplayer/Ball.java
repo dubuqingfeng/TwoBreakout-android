@@ -44,6 +44,7 @@ public class Ball extends ShapeDrawable {
 
 	// 判断是否增球以及穿透
 	public boolean addflag;
+	public boolean bigballflag = false;
 	public boolean strongflag = false;
 	// 当球击中屏幕底部的计时
 	private final int resetBallTimer = 1000;
@@ -94,12 +95,12 @@ public class Ball extends ShapeDrawable {
 		//this.getPaint().setColor(Color.CYAN);
 		soundOn = sound;
 
-		if (soundOn) {
+		//if (soundOn) {
 			soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
 			paddleSoundId = soundPool.load(context, R.raw.paddle, 0);
 			blockSoundId = soundPool.load(context, R.raw.block, 0);
 			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
-		}
+		//}
 		for(int i = 1; i < 7 ;i++){
 			this.itembmp[i] = readBitmap(context, "item"+i);
 		}
@@ -231,6 +232,8 @@ public class Ball extends ShapeDrawable {
 				Thread.sleep(resetBallTimer);
 				initCoords(SCREEN_WIDTH, SCREEN_HEIGHT); // reset ball
 				newGame  = true;
+				radius = SCREEN_WIDTH / 48;
+				bigballflag = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -412,11 +415,20 @@ public class Ball extends ShapeDrawable {
 	 */
 
 	public void addBallVelocity() {
-		if (velocityX <= 5) {
-
+		if (velocityX <= 500) {
+			if(velocityX >= 0){
+				velocityX += 10;
+			}else{
+				velocityX -= 10;
+			}
 		}
-		if (velocityY <= 5) {
-
+		if (velocityY <= 500) {
+			if(velocityY >= 0){
+				velocityY += 10;
+			}else{
+				velocityY -= 10;
+			}
+			
 		}
 	}
 
@@ -430,19 +442,29 @@ public class Ball extends ShapeDrawable {
 	 * @return
 	 */
 	public void subBallVelocity() {
-		if (velocityX >= 10) {
-
+		if (velocityX >= 2) {
+			velocityX -= 10;
+		}else if(velocityX <= -2){
+			velocityX += 10;
 		}
-		if (velocityY >= 10) {
-
+		if (velocityY >= 2) {
+			velocityY -= 10;
+		}else if(velocityY <= -2){
+			velocityY += 10;
 		}
 	}
 
 	/**
-	 * 
+	 * 增大球尺寸
 	 */
 	public void addBallSize() {
-
+		radius = SCREEN_WIDTH / 150;
+		// ball coordinates 球坐标
+		left -=  radius;
+		right += radius;
+		top -= radius;
+		bottom +=  radius;
+		bigballflag = true;
 	}
 	public void setStrongBall(){
 		strongflag = true;
@@ -495,6 +517,7 @@ public class Ball extends ShapeDrawable {
 	 * */
 	public void close() {
 		if (soundOn) {
+			//NullPointer
 			soundPool.release();
 			soundPool = null;
 		}
@@ -523,9 +546,19 @@ public class Ball extends ShapeDrawable {
 			item.paddleCollision = false;
 		}else {
 			item.paddleCollision = true;
+			/**
+			 * itemflg  
+			 * 3	增大挡板
+			 * 4	减小挡板
+			 * 2	strong球
+			 * 5	增加速度
+			 * 6 	减小速度
+			 */
 			switch(item.Itemflg){
 			case 1:
-				
+				if(!bigballflag){
+					addBallSize();
+				}
 				break;
 			case 2:setStrongBall();
 				break;
@@ -533,8 +566,8 @@ public class Ball extends ShapeDrawable {
 				paddle.addPaddleWidth();
 				break;
 			case 4:paddle.subPaddleWidth();break;
-			case 5:break;
-			case 6:break;
+			case 5:addBallVelocity();break;
+			case 6:subBallVelocity();break;
 			}
 		}
 		return item.paddleCollision;

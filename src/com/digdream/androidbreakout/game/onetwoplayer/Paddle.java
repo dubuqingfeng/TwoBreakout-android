@@ -62,7 +62,6 @@ public class Paddle extends ShapeDrawable {
          }
          else
          {
-        	 Log.w("test","test");
          	//这里是邀请者
          	top = (SCREEN_HEIGHT - paddle_offset) - paddle_height;
          	bottom = (SCREEN_HEIGHT - paddle_offset) + paddle_height;
