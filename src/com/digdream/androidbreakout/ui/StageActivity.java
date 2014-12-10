@@ -84,6 +84,7 @@ public class StageActivity extends Activity {
 		public void onClick(View v) {
 			switch(v.getId())
 			{
+			//相伴
 				//相识或相遇
 				case R.id.btn_stage_1:
 					if(preferences.getLevel() >= 0 )
@@ -102,7 +103,7 @@ public class StageActivity extends Activity {
 						toNextActivity();
 						//跳转到第二关
 					}else{
-						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "您未闯到此关卡。", Toast.LENGTH_SHORT).show();
 					}
 					break;
 					//相知
@@ -112,7 +113,7 @@ public class StageActivity extends Activity {
 						stage = 3;
 						toNextActivity();
 					}else{
-						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "您未闯到此关卡。", Toast.LENGTH_SHORT).show();
 					}
 					break;
 					//相恋
@@ -122,7 +123,7 @@ public class StageActivity extends Activity {
 						stage = 4;
 						toNextActivity();
 					}else{
-						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "您未闯到此关卡。", Toast.LENGTH_SHORT).show();
 					}
 					break;
 					//相依
@@ -132,7 +133,7 @@ public class StageActivity extends Activity {
 						stage = 5;
 						toNextActivity();
 					}else{
-						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "您未闯到此关卡。", Toast.LENGTH_SHORT).show();
 					}
 					break;
 					//相离
@@ -142,7 +143,7 @@ public class StageActivity extends Activity {
 						stage = 6;
 						toNextActivity();
 					}else{
-						Toast.makeText(getApplicationContext(), "等级不够", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "您未闯到此关卡。", Toast.LENGTH_SHORT).show();
 					}
 					break;
 				default :

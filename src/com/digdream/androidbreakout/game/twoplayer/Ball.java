@@ -109,7 +109,7 @@ public class Ball extends ShapeDrawable {
 				// 这里是邀请者
 				velocityY = -velocityY;
 			}
-			
+
 		}
 	}
 
@@ -125,7 +125,7 @@ public class Ball extends ShapeDrawable {
 	}
 
 	/**
-	 *  更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值使用递减生命数。
+	 * 更新球的坐标。如果有冲突，方向球的速度而改变。返回一个整数，这取决于是否与屏幕底部的球碰撞。返回值使用递减生命数。
 	 * 
 	 * @return number to decrement player turns
 	 * */
@@ -153,7 +153,7 @@ public class Ball extends ShapeDrawable {
 			velocityY = -velocityY;
 		}
 		// side walls collision侧壁碰撞
-		if (topPaddleCollision && velocityY > 0) {
+		if (topPaddleCollision) {
 			int toppaddleSplit = (mTopPaddle.right - mTopPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
 			if (ballCenter < mTopPaddle.left + toppaddleSplit) {
@@ -227,21 +227,54 @@ public class Ball extends ShapeDrawable {
 
 		return paddleCollision;
 	}
+
 	public boolean checkTopPaddleCollision(TopPaddle toppaddle) {
 		mTopPaddle = toppaddle.getBounds();
 		ballRect = this.getBounds();
-
-		if (ballRect.left >= mTopPaddle.left - (radius * 2)
-				&& ballRect.right <= mTopPaddle.right + (radius * 2)
-				&& ballRect.bottom >= mTopPaddle.top - (radius * 2)
-				&& ballRect.top <= mTopPaddle.bottom + (radius * 2)) {
-			topPaddleCollision = true;
-			if (soundOn && velocityY > 0) {
-				soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
+		if (!GameView2p.mIsInviter) {
+			// 这里不是邀请者
+			if (ballRect.left >= mTopPaddle.left - (radius * 2)
+					&& ballRect.right <= mTopPaddle.right + (radius * 2)
+					&& ballRect.bottom >= mTopPaddle.top - (radius * 2)
+					&& ballRect.top <= mTopPaddle.bottom + (radius * 2)) {
+				topPaddleCollision = true;
+				if (soundOn && velocityY > 0) {
+					soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
+				}
+			} else
+				topPaddleCollision = false;
+			
+			
+		} else {
+			if (ballRect.left >= mTopPaddle.left
+					&& ballRect.left >= mTopPaddle.right) {
+				topPaddleCollision = false;
+			} else if (ballRect.left <= mTopPaddle.left
+					&& ballRect.right <= mTopPaddle.left) {
+				topPaddleCollision = false;
+			} else if (ballRect.bottom <= mTopPaddle.top
+					&& ballRect.top <= mTopPaddle.bottom) {
+				topPaddleCollision = false;
+			} else if (ballRect.top >= mTopPaddle.bottom
+					&& ballRect.bottom >= mTopPaddle.top) {
+				topPaddleCollision = false;
+			}/*
+			 * else if (ballRect.left >= mTopPaddle.left - (radius * 2) &&
+			 * ballRect.right <= mTopPaddle.right + (radius * 2) && ballRect.bottom
+			 * >= mTopPaddle.bottom + (radius * 2) && ballRect.top >= mTopPaddle.top
+			 * ) { topPaddleCollision = true; if (soundOn && velocityY > 0) {
+			 * soundPool.play(paddleSoundId, 1, 1, 1, 0, 1); } }else
+			 * if(ballRect.left >= mTopPaddle.left - (radius * 2) && ballRect.right
+			 * <= mTopPaddle.right + (radius * 2) && ballRect.bottom >=
+			 * mTopPaddle.top - (radius * 2) && ballRect.top <= mTopPaddle.bottom +
+			 * (radius * 2)) { topPaddleCollision = true; if (soundOn && velocityY >
+			 * 0) { soundPool.play(paddleSoundId, 1, 1, 1, 0, 1); } }
+			 */else {
+				topPaddleCollision = true;
 			}
-		} else
-			topPaddleCollision = false;
-
+			
+		}
+		
 		return topPaddleCollision;
 	}
 
@@ -266,39 +299,82 @@ public class Ball extends ShapeDrawable {
 
 		// check collision; remove block if true
 		for (int i = blockListLength - 1; i >= 0; i--) {
-			Rect blockRect = blocks.get(i).getBounds();
+			Rect blockRect = blocks.get(i).getRect();
 			int color = blocks.get(i).getColor();
 
+			/*
+			 * if (ballLeft >= blocks.get(i).left - (radius * 2) && ballLeft <=
+			 * blocks.get(i).right + (radius * 2) && (ballTop ==
+			 * blocks.get(i).bottom || ballTop == blocks.get(i).top)) {
+			 * blockCollision = true; blocks.remove(i); } else if (ballRight <=
+			 * blocks.get(i).right && ballRight >= blocks.get(i).left && ballTop
+			 * <= blocks.get(i).bottom && ballTop >= blocks.get(i).top) {
+			 * blockCollision = true; blocks.remove(i); } else if (ballLeft >=
+			 * blocks.get(i).left && ballLeft <= blocks.get(i).right &&
+			 * ballBottom <= blocks.get(i).bottom && ballBottom >=
+			 * blocks.get(i).top) { blockCollision = true; blocks.remove(i); }
+			 * else if (ballRight <= blocks.get(i).right && ballRight >=
+			 * blocks.get(i).left && ballBottom <= blocks.get(i).bottom &&
+			 * ballBottom >= blocks.get(i).top) { blockCollision = true;
+			 * blocks.remove(i); }
+			 */
 			if (ballLeft >= blockRect.left - (radius * 2)
 					&& ballLeft <= blockRect.right + (radius * 2)
 					&& (ballTop == blockRect.bottom || ballTop == blockRect.top)) {
 				blockCollision = true;
-				blocks.remove(i);
+				if (blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2) {
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballRight <= blockRect.right
 					&& ballRight >= blockRect.left
 					&& ballTop <= blockRect.bottom && ballTop >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if (blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2) {
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballLeft >= blockRect.left
 					&& ballLeft <= blockRect.right
 					&& ballBottom <= blockRect.bottom
 					&& ballBottom >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if (blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+				else if (blocks.get(i).getBlockState() == 2) {
+					blocks.get(i).changeBlockState();
+				}
 			} else if (ballRight <= blockRect.right
 					&& ballRight >= blockRect.left
 					&& ballBottom <= blockRect.bottom
 					&& ballBottom >= blockRect.top) {
 				blockCollision = true;
-				blocks.remove(i);
+				if (blocks.get(i).getBlockState() == 1)
+					blocks.remove(i);
+
+				else if (blocks.get(i).getBlockState() == 2) {
+					blocks.get(i).changeBlockState();
+				}
 			}
 
 			if (blockCollision) {
 				if (soundOn) {
 					soundPool.play(blockSoundId, 1, 1, 1, 0, 1);
 				}
+				// 这里可以添加改变颜色
+				Random random = new Random();
+				int r = random.nextInt(256);
+				int g = random.nextInt(256);
+				int b = random.nextInt(256);
+				this.getPaint().setColor(Color.rgb(r, g, b));
+				// randColor();
+				// this.getPaint().setColor(Color.BLUE);
+
 				return points += getPoints(color);
 			}
+
 		}
 		return points;
 	}

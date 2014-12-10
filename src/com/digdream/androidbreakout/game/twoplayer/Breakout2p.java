@@ -1,5 +1,6 @@
 package com.digdream.androidbreakout.game.twoplayer;
 
+import com.digdream.androidbreakout.R;
 import com.digdream.androidbreakout.module.GameMessages.GameBallDataMessage;
 import com.digdream.androidbreakout.module.GameMessages.GameDataMessage;
 import com.digdream.androidbreakout.module.GameMessages.GameEndMessage;
@@ -9,7 +10,11 @@ import com.lenovo.game.GameMessage;
 import com.lenovo.game.GameUserInfo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -105,9 +110,34 @@ public class Breakout2p extends BaseActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			//结束
+			showExitDialog();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	/**
+	 * 展示退出的对话框，需修改样式。
+	 */
+	protected void showExitDialog() {
+		AlertDialog.Builder builder = new Builder(Breakout2p.this , R.style.dialog);
+		builder.setMessage(R.string.exit_text);
+		builder.setTitle("温馨提示");
+		builder.setPositiveButton(R.string.ok, new OnClickListener() {
+		
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				//mGameShare.quitGame();
+				Breakout2p.this.finish();
+				System.exit(0);
+			}
+		});
+		builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
 	}
 	/**
 	 * 

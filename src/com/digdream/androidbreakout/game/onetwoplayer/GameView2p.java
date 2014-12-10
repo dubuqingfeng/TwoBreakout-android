@@ -74,10 +74,13 @@ public class GameView2p extends SurfaceView implements Runnable {
 	// private Canvas canvas2p;
 	// 多点触控
 	private SparseArray<PointF> mActivePointers;
-	private StageData stagemap;
+	private TwoDataStage stagemap;
 	private Bitmap blockbmp;
 	private Matrix matrix;
 	private Bitmap blockbmpfixed;
+	private boolean single = true;
+	private float eventY;
+	private TwoDataStage stagedata;
 
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
@@ -92,6 +95,8 @@ public class GameView2p extends SurfaceView implements Runnable {
 	public GameView2p(Context context, int launchNewGame, boolean sound) {
 		super(context);
 		stage = 1;
+		//stage = StageActivity.stage;
+		stagedata = new TwoDataStage(stage);
 		startNewGame = launchNewGame; // new game or continue
 		playerTurns = PLAYER_TURNS_NUM;
 		soundToggle = sound;
@@ -174,15 +179,23 @@ public class GameView2p extends SurfaceView implements Runnable {
 				}
 
 				if (touched) {
-					//
-					for (int size = mActivePointers.size(), i = 0; i < size; i++) {
-						PointF point = mActivePointers.valueAt(i);
-						if (point != null) {
-							if (point.y >= canvas.getHeight() / 2)
-								// 这里如果坐标大于屏幕一半移动下面挡板。
-								paddle.movePaddle((int) point.x);
-							else {
-								toppaddle.movePaddle((int) point.x);
+					if(single){
+						if (eventY >= canvas.getHeight() / 2)
+							// 这里如果坐标大于屏幕一半移动下面挡板。
+							paddle.movePaddle((int) eventX);
+						else {
+							toppaddle.movePaddle((int) eventX);
+						}
+					}else{
+						for (int size = mActivePointers.size(), i = 0; i < size; i++) {
+							PointF point = mActivePointers.valueAt(i);
+							if (point != null) {
+								if (point.y >= canvas.getHeight() / 2)
+									// 这里如果坐标大于屏幕一半移动下面挡板。
+									paddle.movePaddle((int) point.x);
+								else {
+									toppaddle.movePaddle((int) point.x);
+								}
 							}
 						}
 					}
@@ -370,11 +383,11 @@ public class GameView2p extends SurfaceView implements Runnable {
 		 * 读取关卡数据，值为2时需打两次。。。
 		 */
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);
-				//if (StageData.GameDataArray[i][j] == 1) {
+				if (TwoDataStage.GameDataArray[i][j] == 1) {
 					int color;
 					if (i < 2)
 						color = Color.RED;
@@ -395,8 +408,8 @@ public class GameView2p extends SurfaceView implements Runnable {
 						//	null);
 					Block block = new Block(localRect1, localRect2, blockbmpfixed,color);
 					blocksList.add(block);
-				/*}
-				if(StageData.GameDataArray[i][j] == 2) {
+				}
+				if(TwoDataStage.GameDataArray[i][j] == 2) {
 					int color;
 					if (i < 2)
 						color = Color.RED;
@@ -416,7 +429,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 						//	null);
 					Block block = new Block(localRect1, localRect2, blockbmpfixed,color,2);
 					blocksList.add(block);
-				}*/
+				}
 				// Rect r = new Rect();
 				// r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
 				// y_coordinate + blockHeight);
@@ -507,7 +520,62 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 * MotionEvent.ACTION_MOVE) { eventX = event.getX(); touched = true; }
 	 * return touched; }
 	 */
-	public boolean onTouchEvent(MotionEvent event) {
+	@Override
+	  public boolean onTouchEvent(MotionEvent event) {
+
+	    // get pointer index from the event object
+	    int pointerIndex = event.getActionIndex();
+
+	    // get pointer ID
+	    int pointerId = event.getPointerId(pointerIndex);
+
+	    // get masked (not specific to a pointer) action
+	    int maskedAction = event.getActionMasked();
+
+	    switch (maskedAction) {
+
+	    case MotionEvent.ACTION_DOWN:
+	    case MotionEvent.ACTION_POINTER_DOWN: {
+	      // We have a new pointer. Lets add it to the list of pointers
+
+	      PointF f = new PointF();
+	      f.x = event.getX(pointerIndex);
+	      f.y = event.getY(pointerIndex);
+	      mActivePointers.put(pointerId, f);
+	      break;
+	    }
+	    case MotionEvent.ACTION_MOVE: { // a pointer was moved
+	      for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+	    	  if(size == 1){
+	    		  eventX = event.getX(i);
+		          eventY = event.getY(i);
+		          single = true;
+	    	  }else{
+	        PointF point = mActivePointers.get(event.getPointerId(i));
+	        if (point != null) {
+	          point.x = event.getX(i);
+	          point.y = event.getY(i);
+	          eventX = event.getX(i);
+	          eventY = event.getY(i);
+	        }
+	        single = false;
+	        }
+	      }
+	      touched = true;
+	      break;
+	    }
+	    case MotionEvent.ACTION_UP:
+	    case MotionEvent.ACTION_POINTER_UP:
+	    case MotionEvent.ACTION_CANCEL: {
+	      mActivePointers.remove(pointerId);
+	      break;
+	    }
+	    }
+
+	    return true;
+	  }
+	/*public boolean onTouchEvent(MotionEvent event) {
+		int pointerCount = event.getPointerCount();
 		int action = event.getAction() & MotionEvent.ACTION_MASK;
 		int pointerIndex = event.getActionIndex();
 		int pointerId = event.getPointerId(pointerIndex);
@@ -518,12 +586,26 @@ public class GameView2p extends SurfaceView implements Runnable {
 			break;
 		}
 		case MotionEvent.ACTION_MOVE: {
-			PointF first = new PointF();
-			first.x = event.getX(pointerIndex);
-			first.y = event.getY(pointerIndex);
-			mActivePointers.put(pointerId, first);
-			touched = true;
-			/*for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+			if(pointerCount >= 2){
+				for (int size = event.getPointerCount(), i = 0; i < size; i++) {
+					PointF point = mActivePointers.get(event.getPointerId(i));
+					if (point != null) {
+						point.x = event.getX(i);
+						// eventX = event.getX(i);
+						point.y = event.getY(i);
+						touched = true;
+					}
+					mActivePointers.put(pointerId, point);
+				
+				}
+			}
+			if(pointerCount == 1){
+				eventY = event.getY();
+				eventX = event.getX(); 
+				single = true;
+				touched = true;
+			}
+			for (int size = event.getPointerCount(), i = 0; i < size; i++) {
 				PointF point = mActivePointers.get(event.getPointerId(i));
 				if (point != null) {
 					point.x = event.getX(i);
@@ -532,7 +614,7 @@ public class GameView2p extends SurfaceView implements Runnable {
 					touched = true;
 				}
 				//mActivePointers.put(pointerId, point);
-			}*/
+			}
 			// eventX = event.getX();
 			 Log.d("CV","Pointer Move ");
 			break;
@@ -542,14 +624,21 @@ public class GameView2p extends SurfaceView implements Runnable {
 			// get pointer index from the event object
 			
 			// get pointer ID
-
+			// We have a new pointer. Lets add it to the list of pointers
+			PointF f = new PointF();
+			f.x = event.getX(pointerIndex);
+			f.y = event.getY(pointerIndex);
+			mActivePointers.put(pointerId, f);
+			Log.v(TAG, "action_pointer_down");
+			touched = true;
+			single = false;
+			break;
 			PointF f = new PointF();
 			f.x = event.getX(pointerIndex);
 			f.y = event.getY(pointerIndex);
 			mActivePointers.put(pointerId, f);
 			touched = true;
 			Log.w("CV", "Other point down");
-			break;
 		}
 		case MotionEvent.ACTION_POINTER_UP: {
 			Log.w("CV", "Other point up");
@@ -560,12 +649,11 @@ public class GameView2p extends SurfaceView implements Runnable {
 			break;
 		}
 		case MotionEvent.ACTION_CANCEL: {
-			mActivePointers.remove(pointerId);
 			break;
 		}
 		}
 		return true;
-	}
+	}*/
 
 	/*@Override
 	public boolean onTouchEvent(MotionEvent event) {

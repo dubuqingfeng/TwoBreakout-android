@@ -159,7 +159,7 @@ public class Ball extends ShapeDrawable {
 			velocityY = -velocityY;
 		}
 		// side walls collision²à±ÚÅö×²
-		if (topPaddleCollision && velocityY > 0) {
+		if (topPaddleCollision ) {
 			int toppaddleSplit = (mTopPaddle.right - mTopPaddle.left) / 4;
 			int ballCenter = ballRect.centerX();
 			if (ballCenter < mTopPaddle.left + toppaddleSplit) {
@@ -172,6 +172,7 @@ public class Ball extends ShapeDrawable {
 				velocityX = radius * 3;
 			}
 			velocityY = -velocityY;
+			topPaddleCollision = false;
 		}
 
 		// side walls collision
@@ -248,18 +249,33 @@ public class Ball extends ShapeDrawable {
 	public boolean checkTopPaddleCollision(TopPaddle toppaddle) {
 		mTopPaddle = toppaddle.getBounds();
 		ballRect = this.getBounds();
-
-		if (ballRect.left >= mTopPaddle.left - (radius * 2)
+		if(ballRect.left >= mTopPaddle.left && ballRect.left >= mTopPaddle.right){
+			topPaddleCollision = false;
+		}else if(ballRect.left <= mTopPaddle.left && ballRect.right <= mTopPaddle.left){
+			topPaddleCollision = false;
+		}else if(ballRect.bottom <= mTopPaddle.top && ballRect.top <= mTopPaddle.bottom){
+			topPaddleCollision = false;
+		}else if(ballRect.top >= mTopPaddle.bottom && ballRect.bottom >= mTopPaddle.top){
+			topPaddleCollision = false;
+		}/*else if (ballRect.left >= mTopPaddle.left - (radius * 2)
 				&& ballRect.right <= mTopPaddle.right + (radius * 2)
-				&& ballRect.bottom >= mTopPaddle.top - (radius * 2)
-				&& ballRect.top >= mTopPaddle.bottom + (radius * 2)) {
+				&& ballRect.bottom >= mTopPaddle.bottom + (radius * 2)
+				&& ballRect.top >= mTopPaddle.top ) {
 			topPaddleCollision = true;
 			if (soundOn && velocityY > 0) {
 				soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
 			}
-		} else
-			topPaddleCollision = false;
-
+		}else if(ballRect.left >= mTopPaddle.left - (radius * 2)
+				&& ballRect.right <= mTopPaddle.right + (radius * 2)
+				&& ballRect.bottom >= mTopPaddle.top - (radius * 2)
+				&& ballRect.top <= mTopPaddle.bottom + (radius * 2)) {
+			topPaddleCollision = true;
+			if (soundOn && velocityY > 0) {
+				soundPool.play(paddleSoundId, 1, 1, 1, 0, 1);
+			}
+		} */else {
+			topPaddleCollision = true;
+		}
 		return topPaddleCollision;
 	}
 

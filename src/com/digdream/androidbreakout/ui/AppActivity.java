@@ -270,6 +270,9 @@ public class AppActivity extends BaseActivity {
 	private void chooseLevel() {
 		Intent intent = new Intent(AppActivity.this,
 				com.digdream.androidbreakout.ui.LevelChooseActivity.class);
+		intent.putExtra("mode", mGameData.mMode);
+		intent.putExtra(NEW_GAME, newGame);
+		intent.putExtra(SOUND_ON_OFF, sound);
 		startActivity(intent);
 		AppActivity.this.finish();
 	}
@@ -311,18 +314,18 @@ public class AppActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		/*SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
+		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
 		sound = soundSettings.getBoolean("soundOn", true);
 		if(sound){
 			//πÿ±’…˘“Ù
-			mAudioBtn.setBackgroundResource(R.drawable.button_sound_off);
+			mAudioBtn.setBackgroundResource(R.drawable.button_sound_on);
 			sound = false;
 		}
 		else{
-			mAudioBtn.setBackgroundResource(R.drawable.button_sound_on);
+			mAudioBtn.setBackgroundResource(R.drawable.button_sound_off);
 			sound = true;
 		}
-		SharedPreferences soundSettingsresume = getSharedPreferences(SOUND_PREFS, 0);
+	/*	SharedPreferences soundSettingsresume = getSharedPreferences(SOUND_PREFS, 0);
 		SharedPreferences.Editor soundEditorresume = soundSettingsresume.edit();
 		soundEditorresume.putBoolean("soundOn", sound);
 		soundEditorresume.commit();*/

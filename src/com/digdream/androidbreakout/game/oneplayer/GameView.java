@@ -397,7 +397,7 @@ public class GameView extends SurfaceView implements Runnable {
 		 * 读取关卡数据，值为2时需打两次。。。
 		 */
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);

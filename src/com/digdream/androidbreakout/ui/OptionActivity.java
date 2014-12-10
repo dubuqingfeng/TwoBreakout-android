@@ -23,7 +23,6 @@ public class OptionActivity extends BaseActivity{
 	private boolean sound;
 	private static final String SOUND_PREFS = "SOUND_PREFS";
 	private final String SOUND_ON_OFF = "SOUND_ON_OFF";
-	private ProgressBar mVelocityProgressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,34 +35,37 @@ public class OptionActivity extends BaseActivity{
 	private void init() {
 		//控制声音开关
 		mBtnAudio = (Button)findViewById(R.id.btn_audio);
-		//控制单人模式速度
-		mVelocityProgressBar = (ProgressBar) findViewById(R.id.velocityprogressBar);
 		//mVelocityProgressBar.getProgress();
 		SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
 		sound = soundSettings.getBoolean("soundOn", true);
 		if(sound){
-			//关闭声音
-			mBtnAudio.setBackgroundResource(R.drawable.button_sound_off);
+			mBtnAudio.setBackgroundResource(R.drawable.button_sound_on);
 		}
 		else{
-			mBtnAudio.setBackgroundResource(R.drawable.button_sound_on);
+			//关闭声音
+			mBtnAudio.setBackgroundResource(R.drawable.button_sound_off);
 		}
 		mBtnAudio.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				if(sound){
-					//关闭声音
-					mBtnAudio.setBackgroundResource(R.drawable.button_sound_off);
+					mBtnAudio.setBackgroundResource(R.drawable.button_sound_on);
+					SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
+					SharedPreferences.Editor soundEditor = soundSettings.edit();
+					soundEditor.putBoolean("soundOn", sound);
+					soundEditor.commit();
 					sound = false;
 				}
 				else{
-					mBtnAudio.setBackgroundResource(R.drawable.button_sound_on);
+					//关闭声音
+					mBtnAudio.setBackgroundResource(R.drawable.button_sound_off);
+					SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
+					SharedPreferences.Editor soundEditor = soundSettings.edit();
+					soundEditor.putBoolean("soundOn", sound);
+					soundEditor.commit();
 					sound = true;
 				}
-				SharedPreferences soundSettings = getSharedPreferences(SOUND_PREFS, 0);
-				SharedPreferences.Editor soundEditor = soundSettings.edit();
-				soundEditor.putBoolean("soundOn", sound);
-				soundEditor.commit();
+				
 			}
 
 		});

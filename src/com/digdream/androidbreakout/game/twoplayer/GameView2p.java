@@ -23,8 +23,10 @@ import com.lenovo.game.GameUserInfo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,6 +41,7 @@ import android.view.SurfaceView;
  * 
  */
 public class GameView2p extends SurfaceView implements Runnable {
+	private int stage;
 	private static final String TAG = "2p的游戏界面GameView2p extends SurfaceView implements Runnable";
 	private boolean showGameOverBanner = false;
 	private int levelCompleted = 0;
@@ -76,7 +79,13 @@ public class GameView2p extends SurfaceView implements Runnable {
 	private TopPaddle toppaddle;
 	// private Canvas canvas2p;
 	private Ball2p ball2;
+	private Bitmap blockbmp;
+	private Matrix matrix;
+	private Bitmap blockbmpfixed;
+	private boolean single = true;
+	private float eventY;
 
+	private TwoStageData stagedata;
 	/**
 	 * 构造函数。设置声音的状态和新的游戏信号，根据从breakout类传入intent。实例球，砖块和挡板。设置了paint参数绘制文本到屏幕上。
 	 * 
@@ -89,6 +98,9 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 * */
 	public GameView2p(Context context, int launchNewGame, boolean sound) {
 		super(context);
+		stage = 1;
+		//stage = StageActivity.stage;
+		stagedata = new TwoStageData(stage);
 		startNewGame = launchNewGame; // new game or continue
 		playerTurns = PLAYER_TURNS_NUM;
 		soundToggle = sound;
@@ -99,8 +111,27 @@ public class GameView2p extends SurfaceView implements Runnable {
 		toppaddle = new TopPaddle();
 		blocksList = new ArrayList<Block>();
 		//设置背景
-		setBackgroundResource(R.drawable.chara1);
-		
+		// 设置背景
+		switch (stage) {
+		case 1:
+			setBackgroundResource(R.drawable.chara1);
+			break;
+		case 2:
+			setBackgroundResource(R.drawable.chara2);
+			break;
+		case 3:
+			setBackgroundResource(R.drawable.chara3);
+			break;
+		case 4:
+			setBackgroundResource(R.drawable.chara4);
+			break;
+		case 5:
+			setBackgroundResource(R.drawable.chara5);
+			break;
+		case 6:
+			setBackgroundResource(R.drawable.chara6);
+			break;
+		}		
 		scorePaint = new Paint();
 		scorePaint.setColor(Color.WHITE);
 		scorePaint.setTextSize(25);
@@ -114,7 +145,25 @@ public class GameView2p extends SurfaceView implements Runnable {
 		getReadyPaint.setTextAlign(Paint.Align.CENTER);
 		getReadyPaint.setColor(Color.WHITE);
 		getReadyPaint.setTextSize(45);
+		this.blockbmp = readBitmap(context, "chara" + this.stage + "_block");
+		this.matrix = new Matrix();
 	}
+	/**
+	 * 读取位图
+	 * 
+	 * @param paramContext
+	 *            Android Context
+	 * @param paramString
+	 *            path
+	 * @return bitmap
+	 */
+
+	private static Bitmap readBitmap(Context paramContext, String paramString) {
+		int i = paramContext.getResources().getIdentifier(paramString,
+				"drawable", paramContext.getPackageName());
+		return BitmapFactory.decodeResource(paramContext.getResources(), i);
+	}
+
 
 	/**
 	 * 运行游戏线程。设置帧速率来绘制图形。使用画布绘制。如果不存在的砖块，初始化游戏对象。移动根据触摸事件的挡板。
@@ -132,16 +181,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 
 			if (holder.getSurface().isValid()) {
 				canvas = holder.lockCanvas();
-				// canvas.drawColor(Color.BLACK);
-				// 获得图片
-				bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
-						R.drawable.chara1);
-				// 设置显示大小
-				bitmapDrawable.setBounds(0, 0, 80, 80);
-				bitmap = (bitmapDrawable).getBitmap();
-				// 画出图片
-				canvas.drawBitmap(bitmap, 50, 50, null);
-				// canvas.drawColor(Color.BLACK);
 				canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);// 清屏幕.
 				if (blocksList.size() == 0) {
 					checkSize = true;
@@ -192,7 +231,6 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void drawToCanvas(Canvas canvas) {
-		//canvas.drawColor(Color.TRANSPARENT, Mode.CLEAR);
 		drawBlocks(canvas);
 		paddle.drawPaddle(canvas);
 		toppaddle.drawPaddle(canvas);
@@ -264,15 +302,21 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 *            graphical canvas
 	 * */
 	private void initObjects(Canvas canvas) {
+		float w = canvas.getWidth();
+		int width = this.blockbmp.getWidth();
+		int height = this.blockbmp.getHeight();
+		float h = width * height / w;
+		this.matrix.postScale(w / width, h / height);
+		blockbmpfixed = Bitmap.createBitmap(blockbmp, 0, 0, width, height,matrix,true);
 		touched = false; // reset paddle location
 		ball.initCoords(canvas.getWidth(), canvas.getHeight());
 		paddle.initCoords(canvas.getWidth(), canvas.getHeight());
 		toppaddle.initCoords(canvas.getWidth(), canvas.getHeight());
-		if (startNewGame == 0) {
+		/*if (startNewGame == 0) {
 			restoreGameData();
-		} else {
+		} else {*/
 			initBlocks(canvas);
-		}
+		//}
 	}
 
 	/**
@@ -326,36 +370,76 @@ public class GameView2p extends SurfaceView implements Runnable {
 	 *            graphics canvas
 	 * */
 	private void initBlocks(Canvas canvas) {
-		int blockHeight = canvas.getWidth() / 18;
+		int blockHeight = (((480 * 720 ) / canvas.getWidth() ) *16)/360;
 		int spacing = canvas.getWidth() / 144;
-		int topOffset = canvas.getHeight() / 5;
-		int blockWidth = (canvas.getWidth() / 10) - spacing;
-
-		for (int i = 0; i < 10; i++) {
+		int topOffset = canvas.getHeight() / 10;
+		int blockWidth = (canvas.getWidth() / 10);
+		// 获得图片
+		//bitmapDrawable = (BitmapDrawable) getResources().getDrawable(
+			//	R.drawable.item1);
+		// 设置显示大小
+		//bitmapDrawable.setBounds(0, 0, (canvas.getWidth() / 10),
+				//canvas.getWidth() / 18);
+		//bitmap = (bitmapDrawable).getBitmap();
+		/**
+		 * 这里需要读取StageData.java的数据，读取关卡的数据 控制二维数组。 根据stage值。
+		 * 读取关卡数据，值为2时需打两次。。。
+		 */
+		
+		for (int i = 0; i < 20; i++) {
 			for (int j = 0; j < 10; j++) {
 				int y_coordinate = (i * (blockHeight)) + topOffset;
 				int x_coordinate = j * (blockWidth);
-
-				Rect r = new Rect();
-				r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
-						y_coordinate + blockHeight);
-
-				int color;
-
-				if (i < 2)
-					color = Color.RED;
-				else if (i < 4)
-					color = Color.YELLOW;
-				else if (i < 6)
-					color = Color.GREEN;
-				else if (i < 8)
-					color = Color.MAGENTA;
-				else
-					color = Color.LTGRAY;
-
-				Block block = new Block(r, color);
-
-				blocksList.add(block);
+				if (TwoStageData.GameDataArray[i][j] == 1) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color);
+					blocksList.add(block);
+				}
+				if(TwoStageData.GameDataArray[i][j] == 2) {
+					int color;
+					if (i < 2)
+						color = Color.RED;
+					else if (i < 4)
+						color = Color.YELLOW;
+					else if (i < 6)
+						color = Color.GREEN;
+					else if (i < 8)
+						color = Color.MAGENTA;
+					else
+						color = Color.LTGRAY;
+					Rect localRect1 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					Rect localRect2 = new Rect(blockWidth * (j % 10), blockHeight * (i % 10),
+							blockWidth + blockWidth * (j % 10), blockHeight + blockHeight * (i % 10));
+					//canvas.drawBitmap(this.blockbmp, localRect1, localRect2,
+						//	null);
+					Block block = new Block(localRect1, localRect2, blockbmpfixed,color,2);
+					blocksList.add(block);
+				}
+				// Rect r = new Rect();
+				// r.set(x_coordinate, y_coordinate, x_coordinate + blockWidth,
+				// y_coordinate + blockHeight);
+				
+			//	Block block = new Block(color, bitmap, x_coordinate,
+		//				y_coordinate);
+			//	blocksList.add(block);
 			}
 		}
 	}
