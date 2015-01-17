@@ -82,25 +82,19 @@ public class Ball extends ShapeDrawable {
 	@SuppressWarnings("deprecation")
 	public Ball(Context context, boolean sound) {
 
-		// super();
 		super(new OvalShape());
 
-		// this.matrix = new Matrix();
-		// this.matrix.postScale(0.7F, 0.7F);
 		Random random = new Random();
 		int r = random.nextInt(256);
 		int g = random.nextInt(256);
 		int b = random.nextInt(256);
 		this.getPaint().setColor(Color.rgb(r, g, b));
-		//this.getPaint().setColor(Color.CYAN);
 		soundOn = sound;
 
-		//if (soundOn) {
-			soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
-			paddleSoundId = soundPool.load(context, R.raw.paddle, 0);
-			blockSoundId = soundPool.load(context, R.raw.block, 0);
-			bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
-		//}
+		soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+		paddleSoundId = soundPool.load(context, R.raw.paddle, 0);
+		blockSoundId = soundPool.load(context, R.raw.block, 0);
+		bottomSoundId = soundPool.load(context, R.raw.bottom, 0);
 		for(int i = 1; i < 7 ;i++){
 			this.itembmp[i] = readBitmap(context, "item"+i);
 		}
